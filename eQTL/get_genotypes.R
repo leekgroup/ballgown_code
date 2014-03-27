@@ -80,6 +80,7 @@ colnames(snp) = fam$IID
 save(map,snp, file="GEUVADIS_genotypeData_maf05.rda")
 
 ### get genotype PCs
+####### these lines create plink.mds
 bfile = "Genotypes/GEUVADIS_maf05"
 theCall = paste("plink --bfile", bfile, 
 	"--indep 50 5 1.25 --geno 0.1 --out GEUVADIS_independent --noweb")
