@@ -52,7 +52,7 @@ During TopHat runs in the simulations, we aligned first to the transcriptome, th
 i.e., run `run_sim_directFPKM_geuvadis.sh` or `run_sim_p00.sh`. 
 
 You will need to edit some environment variables at the beginning of these scripts:  
-* `SOFTWAREPATH` should contain a folder called `cufflinks-2.1.1.Linux_x86_64` (containing `cufflinks`, `cuffmerge`)
+* `$SOFTWAREPATH` should contain a folder called `cufflinks-2.1.1.Linux_x86_64` (containing `cufflinks`, `cuffmerge`, and `cuffdiff`)
 * `$SOFTWAREPATH` should also contain the `tablemaker` binary
 * `$ANNOTATIONPATH` should contain a folder called `Homo_Sapiens`, which comes with the Ensembl [iGenomes download](http://tophat.cbcb.umd.edu/igenomes.shtml)
 * `$MAINDIR` only exists to reference `$FOLDERNAME`. All output from this pipeline will be written to `$FOLDERNAME`. **Make sure `$FOLDERNAME` is empty when you begin running the script.**
