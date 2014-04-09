@@ -39,7 +39,7 @@ Finally, you will need [TopHat](http://tophat.cbcb.umd.edu/) (for the paper, we 
 We simulated reads from human chromosome 22, Ensembl version 74. All transcripts can be downloaded [from this link](ftp://ftp.ensembl.org/pub/release-74/fasta/homo_sapiens/cdna/Homo_sapiens.GRCh37.74.cdna.all.fa.gz). Download this file, un-tar, and un-zip it, then run `get_chr22.R` to subset to chromsome 22. This produces `ensembl_chr22.fa`.
 
 #### (2) get annotation files
-We used Illumina's iGenomes annotation files, available at [this link](http://tophat.cbcb.umd.edu/igenomes.shtml). Specifically, we used the [Ensembl annotation](ftp://igenome:G3nom3s4u@ussd-ftp.illumina.com/Homo_sapiens/Ensembl/GRCh37/Homo_sapiens_Ensembl_GRCh37.tar.gz). The `genes.gtf` file (located in the `Annotation/Genes` subfolder) was cleaned with the `clean_genes.R` script to produce our annotation file, `genes-clean.gtf`. This gtf file contains only chromosomes 1-22, X, and Y (the clean_genes script removes all others). 
+We used Illumina's iGenomes annotation files, available at [this link](http://tophat.cbcb.umd.edu/igenomes.shtml). Specifically, we used the Ensembl annotation (first link on the page). The `genes.gtf` file (located in the `Annotation/Genes` subfolder) was cleaned with the `clean_genes.R` script to produce our annotation file, `genes-clean.gtf`. This gtf file contains only chromosomes 1-22, X, and Y (the clean_genes script removes all others). 
 
 `genes-clean.gtf` will soon be available [here]().
 
