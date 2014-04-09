@@ -15,7 +15,7 @@ The scripts `run_sim_directFPKM_geuvadis.sh` and `simReads_FPKM_direct_geuvadis.
 
 ### how to use this code
 
-#### (0) dependencies
+#### (0) get dependencies
 This code depends on R and the Rscript command line utility, the Biostrings, Ballgown, and Polyester R packages, and Python >=2.5. We ran all code on Linux.
 
 To download Biostrings: in R, run:
@@ -33,13 +33,13 @@ install_github("ballgown", "alyssafrazee", subdir="polyester")
 
 Additionally, we relied heavily on the Sun Grid Engine (SGE) scheduling system when running this pipeline, since this is what our department uses to schedule batch cluster jobs. In particular, the shell scripts in this folder contain `qsub` commands, indicating that a script is being submitted to the cluster to be run, so these lines will have to be modified if you want to run this code without using SGE. 
 
-Finally, you will need [TopHat](http://tophat.cbcb.umd.edu/) (for the paper, we used version 2.0.9), [Cufflinks](http://cufflinks.cbcb.umd.edu/manual.html) (we used version 2.1.1), and the tablemaker binary (available in the [main Ballgown repository](https://github.com/alyssafrazee/ballgown)). In these scripts, "tophat" is assumed to be in your path, while the folder containing the "cufflinks", "cuffmerge", and "cuffdiff" binaries and the folder containing the "tablemaker" binary should be in `$SOFTWAREPATH`.
+Finally, you will need [TopHat](http://tophat.cbcb.umd.edu/) (for the paper, we used version 2.0.9), [Cufflinks](http://cufflinks.cbcb.umd.edu/manual.html) (we used version 2.1.1), and the tablemaker binary (available in the [main Ballgown repository](https://github.com/alyssafrazee/ballgown)). These scripts assume "tophat" is in your path. See step (4) for more info on where we assume Cufflinks/Tablemaker are installed.
 
 #### (1) get transcripts to simulate from
 We simulated reads from human chromosome 22, Ensembl version 74. All transcripts can be downloaded [from this link](ftp://ftp.ensembl.org/pub/release-74/fasta/homo_sapiens/cdna/Homo_sapiens.GRCh37.74.cdna.all.fa.gz). Download this file, un-tar, and un-zip it, then run `get_chr22.R` to subset to chromsome 22. This produces `ensembl_chr22.fa`.
 
 #### (2) get annotation files
-We used Illumina's iGenomes annotation files, available at [this link](http://cufflinks.cbcb.umd.edu/igenomes.html). Specifically, we used the Ensembl annotation (ftp://igenome:G3nom3s4u@ussd-ftp.illumina.com/Homo_sapiens/Ensembl/GRCh37/Homo_sapiens_Ensembl_GRCh37.tar.gz). The `genes.gtf` file (located in the `Annotation/Genes` subfolder) was cleaned with the `clean_genes.R` script to produce our annotation file, `genes-clean.gtf`. This gtf file contains only chromosomes 1-22, X, and Y (the clean_genes script removes all others). 
+We used Illumina's iGenomes annotation files, available at [this link](http://tophat.cbcb.umd.edu/igenomes.shtml). Specifically, we used the [Ensembl annotation](ftp://igenome:G3nom3s4u@ussd-ftp.illumina.com/Homo_sapiens/Ensembl/GRCh37/Homo_sapiens_Ensembl_GRCh37.tar.gz). The `genes.gtf` file (located in the `Annotation/Genes` subfolder) was cleaned with the `clean_genes.R` script to produce our annotation file, `genes-clean.gtf`. This gtf file contains only chromosomes 1-22, X, and Y (the clean_genes script removes all others). 
 
 `genes-clean.gtf` will soon be available [here]().
 
@@ -49,7 +49,16 @@ The `ANNOTATIONPATH` variable in the shell scripts points to the folder containi
 During TopHat runs in the simulations, we aligned first to the transcriptome, then to the genome (i.e., we used TopHat's `-G` option). We pre-built a transcriptome index and used that build for all TopHat runs to avoid re-building every time. A script plus small dummy reads used to build the transcriptome index are in the `tophat_transcriptome` subfolder. The `ANNOTATIONPATH` environment variable should be the same as it is in the shell scripts in the main (`simulations`) directory.
 
 #### (4) run the shell script starting with `run_sim`
-So, run `run_sim_directFPKM_geuvadis.sh` or `run_sim_p00.sh`. 
+i.e., run `run_sim_directFPKM_geuvadis.sh` or `run_sim_p00.sh`. 
+
+You will need to edit some environment variables at the beginning of these scripts:  
+* `SOFTWAREPATH` should contain a folder called `cufflinks-2.1.1.Linux_x86_64` (containing `cufflinks`, `cuffmerge`)
+* `$SOFTWAREPATH` should also contain the `tablemaker` binary
+* `$ANNOTATIONPATH` should contain a folder called `Homo_Sapiens`, which comes with the Ensembl [iGenomes download](http://tophat.cbcb.umd.edu/igenomes.shtml)
+* `$MAINDIR` only exists to reference `$FOLDERNAME`. All output from this pipeline will be written to `$FOLDERNAME`. **Make sure `$FOLDERNAME` is empty when you begin running the script.**
+* `$PYTHON` should point to your python executable
+* `Q` is the SGE queue to run the jobs on. Also note that line 2 of the script, the one beginning with `#$`, contains arguments to pass to SGE. Change these as needed for your system.
+
 
 These scripts:  
 * simulate reads with the R scripts prefixed with `simReads` (i.e, `simReads_FPKM_direct_geuvadis.R` for scenario #1, and `simReads_NB_p0.R` for scenario #2.) Read simulation is done with the `simulate_experiment_countmat` function in the [Polyester R package](https://github.com/alyssafrazee/ballgown/tree/master/polyester).
