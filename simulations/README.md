@@ -71,8 +71,6 @@ These scripts:
 
 The python scripts in this repo are also called by the shell scripts. All the python scripts do is look for output: they check to make sure all the TopHat jobs are done before moving on to Cufflinks, check to make sure all the Cufflinks jobs are done before doing Cuffmerge, and check to make sure all the tablemaker jobs have finished before re-organizing output files.
 
-Note also that `simReads_FPKM_direct_geuvadis` estimates some parameters from the GEUVADIS dataset. It relies on 
-
 #### (5) analyze output
 All output will be organized in the folder specified in the `FOLDERNAME` variable at the beginning of the shell scripts. TopHat output will be in the `alignments` subfolder, Cufflinks in the `assemblies` folder, Cuffdiff in the `cuffdiff` folder, etc. Ballgown `.ctab` files will be in subfolders of the `ballgown` directory, so a ballgown object can be created in R as follows:
 
