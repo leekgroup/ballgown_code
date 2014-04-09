@@ -64,21 +64,6 @@ dev.off()
 #### FIGURE 6B (p-value histogram for coverage)
 hist(statres_cov$pval, xlab="p-values", col="gray", breaks=30, main="")
 
-# # limma
-# library(limma)
-# y = log2(texpr(bg)+1)
-# lib_adj = apply(texpr(bg), 2, function(x) {
-#     q3 = quantile(x, 0.75)
-#     sum(x[x < q3])
-# })
-# x = model.matrix(~ pData(bg)$group + lib_adj)
-# fit = lmFit(y, x)
-# fit = eBayes(fit, trend=TRUE)
-# txids = texpr(bg, 'all')$t_id
-# pvals = fit$p.value[,2]
-# hist(pvals, breaks=30, col='gray', main='limma p-values')
-# qvals = p.adjust(pvals, 'fdr')
-
 ## accuracy plots from simulations
 trulyDE = read.table('de_ids.txt')
 simResults = assessSim(bg, statres, annotation=annotation, chr='22', 
