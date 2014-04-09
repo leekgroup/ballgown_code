@@ -57,7 +57,8 @@ You will need to edit some environment variables at the beginning of these scrip
 * `$ANNOTATIONPATH` should contain a folder called `Homo_Sapiens`, which comes with the Ensembl [iGenomes download](http://tophat.cbcb.umd.edu/igenomes.shtml)
 * `$MAINDIR` only exists to reference `$FOLDERNAME`. All output from this pipeline will be written to `$FOLDERNAME`. **Make sure `$FOLDERNAME` is empty when you begin running the script.**
 * `$PYTHON` should point to your python executable
-* `Q` is the SGE queue to run the jobs on. Also note that line 2 of the script, the one beginning with `#$`, contains arguments to pass to SGE. Change these as needed for your system.
+* `$Q` is the SGE queue to run the jobs on. Also note that line 2 of the script, the one beginning with `#$`, contains arguments to pass to SGE. Change these as needed for your system.
+* in `run_sim_directFPKM_geuvadis.sh`, `$GEUVADISBG` should point to the GEUVADIS ballgown object (`geuvadisbg.rda`), which you can download [here](https://www.dropbox.com/s/kp5th9hgkq8ckom/geuvadisbg.rda) or create yourself (see the "GEUVADIS_preprocessing" folder in this repo).
 
 
 These scripts:  
@@ -70,6 +71,8 @@ These scripts:
 
 The python scripts in this repo are also called by the shell scripts. All the python scripts do is look for output: they check to make sure all the TopHat jobs are done before moving on to Cufflinks, check to make sure all the Cufflinks jobs are done before doing Cuffmerge, and check to make sure all the tablemaker jobs have finished before re-organizing output files.
 
+Note also that `simReads_FPKM_direct_geuvadis` estimates some parameters from the GEUVADIS dataset. It relies on 
+
 #### (5) analyze output
 All output will be organized in the folder specified in the `FOLDERNAME` variable at the beginning of the shell scripts. TopHat output will be in the `alignments` subfolder, Cufflinks in the `assemblies` folder, Cuffdiff in the `cuffdiff` folder, etc. Ballgown `.ctab` files will be in subfolders of the `ballgown` directory, so a ballgown object can be created in R as follows:
 
@@ -79,7 +82,10 @@ library(ballgown)
 bgresults = ballgown(dataDir='ballgown', samplePattern='sample')
 ```
 
-Code used to obtain results presented in the manuscript is in `sim_results.R`.
+Code used to obtain results presented in the manuscript is in `sim_results.R`. That script needs three variables at the beginning:  
+* `fpkm_sim_dir` should point to `$FOLDERNAME` from `run_sim_directFPKM_geuvadis.sh` (i.e., the output folder from scenario #1)
+* `nb_sim_dir` should point to `$FOLDERNAME` from `run_sim_p00.sh`
+* `annotation` should point to `genes-clean.gtf` (see section (2))
 
 ### simulated reads
 Simulated reads used for the analysis in the paper will soon be available for download [here]().
