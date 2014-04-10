@@ -13,15 +13,15 @@ Accession numbers are:
 * GSE37764 for the adenocarcinoma dataset
 
 To get these datasets:  
-  1. Go to insilicodb.com  
+  1. Go to [insilicodb.com](https://insilicodb.com/)
   2. Create an account (free)  
-3. At the "Welcome to InSilico DB!" screen, click the "Try for free" button  
-4. This brings you to the InSilico DB search page. In the "Search query" box at the top, enter the accession number for the dataset you want.  
-5. Click the "Analyze (IGV - Download)" button on the result  
-6. Select "Differential Expression (Cuffdiff)"  
-7. Choose a differential expression keyword (there is only one choice for each dataset)  
-8. Click the "Download" button  
-9. Put the resulting tarball in your working directory, untar and unzip to extract the `.db` files referenced in the code.  
+  3. At the "Welcome to InSilico DB!" screen, click the "Try for free" button  
+  4. This brings you to the InSilico DB search page. In the "Search query" box at the top, enter the accession number for the dataset you want.  
+  5. Click the "Analyze (IGV - Download)" button on the result  
+  6. Select "Differential Expression (Cuffdiff)"  
+  7. Choose a differential expression keyword (there is only one choice for each dataset)  
+  8. Click the "Download" button  
+  9. Put the resulting tarball in your working directory, untar and unzip to extract the `.db` files referenced in the code.  
 
 #### other dependencies
 You will also need:  
