@@ -11,9 +11,8 @@ pd = pData(geuvadisbg)
 pd$dirname = as.character(pd$dirname)
 pd$IndividualID = ss(pd$dirname, "_", 1)
 
-##  external for which dups to keep
-pheno = read.delim("GD667.QCstats.masterfile.txt",
-	as.is=TRUE)
+##  external info for which dups to keep
+pheno = read.delim("GD667.QCstats.masterfile.txt", as.is=TRUE)
 m = read.delim("pop_data_withuniqueid.txt",as.is=TRUE)
 pd$SampleID = m$sample_id[match(pd$dirname, m$folder_id)]
 pd$UseThisDup = pheno$UseThisDuplicate[match(pd$SampleID, rownames(pheno))]
@@ -32,13 +31,13 @@ gownTransFPKM = gownTransFPKM[,pd$dirname] # put in same order post-drop
 gownTransMap = structure(geuvadisbg)$trans
 rownames(gownTransFPKM) = names(gownTransMap) = tName
 
-### mean filter
+### mean filter: only keep transcripts with FPKM>0.1
 mmTrans = rowMeans(gownTransFPKM) 
 keepIndex=which(mmTrans > 0.1)
 gownTransFPKM2 = gownTransFPKM[keepIndex,]
 gownTransMap2 = gownTransMap[keepIndex]
 
-# log xform
+# log transformation
 y = log2(gownTransFPKM2 + 1)
 exprsPCs = prcomp(t(y))$x[,1:3]
 
@@ -82,8 +81,8 @@ me = Matrix_eQTL_main(snps=theSnps, gene = exprs,
 	snpspos = snpspos, genepos = genepos, cisDist=1e6)
 save(me, file="eQTL_GEUVADIS_imputed_list_cis_1e6.rda", compress=TRUE)
 
-##
-load("eQTL_GEUVADIS_imputed_list_cis_1e6.rda")
+#### if session interrupted before this:
+# load("eQTL_GEUVADIS_imputed_list_cis_1e6.rda")
 eqtl = me$cis$eqtls
 eqtl$snps = as.character(eqtl$snps)
 eqtl$gene = as.character(eqtl$gene)
