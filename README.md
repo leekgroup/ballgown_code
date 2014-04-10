@@ -3,8 +3,17 @@ Code for analysis in Ballgown manuscript
 
 Pardon our dust!  We're cleaning up our scripts right now, but we'll be pushing all the code to this repo within the next few days.
 
-## scripts
+## scripts/code
 Scripts for each analysis section are available in the relevant subfolder.
+
+### simulations
+All simulation results from the paper were produced with scripts in this folder. Simulation results include:  
+* Figure 2c and 2d
+* Figure 6a, 6b, and 6c
+* Supplementary Figure 1 (both panels)
+
+### GEUVADIS_preprocessing
+The manuscript includes a re-analysis of the [GEUVADIS RNA-sequencing dataset](http://www.geuvadis.org/web/geuvadis/rnaseq-project). This folder includes scripts for downloading and aligning reads, assembling the transcriptome, estimating transcript abundances, and organizing the expression measurements into the GEUVADIS ballgown object (see "GEUVADIS ballgown object" in the data section). The ballgown object was used for the eQTL and RIN analyses.
 
 ## data
 Data is currently available on Dropbox:
