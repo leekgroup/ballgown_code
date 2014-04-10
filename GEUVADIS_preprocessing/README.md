@@ -6,6 +6,7 @@ To run this code, you will need:
 * the Ballgown R package: in R, run:
 ```S
 install.packages("devtools") #if needed
+library(devtools)
 install_github("ballgown", "alyssafrazee")
 ```
 * Tablemaker, downloadable from the `tablemaker` subfolder of the [Ballgown GitHub repo](https://github.com/alyssafrazee/ballgown)
