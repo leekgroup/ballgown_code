@@ -49,7 +49,7 @@ rm -r $OUTDIR
 rm $DATADIR/${RUNID}_1.fastq.gz
 rm $DATADIR/${RUNID}_2.fastq.gz
 EOF
-    qsub -cwd -l mf=20G,h_vmem=5G,h_fsize=100G,jabba -M acfrazee+tophat2@gmail.com -pe local $P tophat_${SAMPLE}.sh
+    qsub -cwd -l mf=20G,h_vmem=5G,h_fsize=100G,jabba -pe local $P tophat_${SAMPLE}.sh
 done < $PDATA
 
 
