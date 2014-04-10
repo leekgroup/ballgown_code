@@ -1,6 +1,10 @@
 ## code for differential expression simulations
 
-This code executes the simulations presented in the [ballgown manuscript](http://biorxiv.org/content/early/2014/03/30/003665.full-text.pdf+html). 
+This code executes the simulations presented in the [ballgown manuscript](http://biorxiv.org/content/early/2014/03/30/003665.full-text.pdf+html). Specifically, `sim_results.R` produces these results:
+
+* Figure 2c and 2d
+* Figure 6a, 6b, and 6c
+* Supplementary Figure 1 (both panels)
 
 ### two simulations
 Two separate simulation scenarios are presented in the manuscript. 
