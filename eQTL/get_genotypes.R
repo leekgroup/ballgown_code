@@ -5,27 +5,28 @@ splitit = function(x) split(seq(along=x),x) # splits into list
 
 ## download the genotype data (only need to do once)
 # system("wget ftp://ftp.ebi.ac.uk/pub/databases/microarray/data/experiment/GEUV/E-GEUV-1/genotypes/*")
+## this is listed as needed data in the README, so if you have already done that, you do not need this
 
 ## MAF filter to 5%, and plink tped
-# files = list.files("Genotypes", pattern="PH1PH2_465", full.names=TRUE)
-# chr = sapply(strsplit(list.files("Genotypes", pattern="PH1PH2_465"), "\\."),"[", 2)
-# out = paste0("Genotypes/", chr, "_filter")
+files = list.files("Genotypes", pattern="PH1PH2_465", full.names=TRUE)
+chr = sapply(strsplit(list.files("Genotypes", pattern="PH1PH2_465"), "\\."),"[", 2)
+out = paste0("Genotypes/", chr, "_filter")
 
-# theCall = paste("vcftools --gzvcf", files, "--out", out, "--maf 0.05 --plink-tped")
-# mclapply(theCall, system, mc.cores=6)
+theCall = paste("vcftools --gzvcf", files, "--out", out, "--maf 0.05 --plink-tped")
+mclapply(theCall, system, mc.cores=6)
 
 ## make bed to store
 out = paste0("Genotypes/chr",1:22,"_filter")
-# theCall = paste("plink --tfile", out,"--make-bed --noweb --out", out)
-# mclapply(theCall, system, mc.cores=6)
+theCall = paste("plink --tfile", out,"--make-bed --noweb --out", out)
+mclapply(theCall, system, mc.cores=6)
 
-## merge beds into 1 for storage
-# mergelist = data.frame(paste0(out, ".bed"),paste0(out, ".bim"),
-	# paste0(out, ".fam"))
-# write.table(mergelist[-1,], file="bedstomerge.txt", row.names=FALSE,
-	# col.names=FALSE, quote=FALSE, sep = " ")
-# system(paste("plink --bfile", out[1], "--merge-list bedstomerge.txt",
-	# "--make-bed --noweb --out GEUVADIS_maf05"))
+# merge beds into 1 for storage
+mergelist = data.frame(paste0(out, ".bed"),paste0(out, ".bim"),
+	paste0(out, ".fam"))
+write.table(mergelist[-1,], file="bedstomerge.txt", row.names=FALSE,
+	col.names=FALSE, quote=FALSE, sep = " ")
+system(paste("plink --bfile", out[1], "--merge-list bedstomerge.txt",
+	"--make-bed --noweb --out GEUVADIS_maf05"))
 
 ## read in tped
 fam = read.table(paste0(out[1], ".fam"), as.is=TRUE, header=FALSE)
