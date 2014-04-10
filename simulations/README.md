@@ -31,6 +31,7 @@ biocLite("Biostrings")
 To download Ballgown and Polyester: in R, run:
 ```S
 install.packages("devtools") #if needed
+library(devtools)
 install_github("ballgown", "alyssafrazee")
 install_github("ballgown", "alyssafrazee", subdir="polyester")
 ```
