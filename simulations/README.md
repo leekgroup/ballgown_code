@@ -36,7 +36,7 @@ Additionally, we relied heavily on the Sun Grid Engine (SGE) scheduling system w
 Finally, you will need [TopHat](http://tophat.cbcb.umd.edu/) (for the paper, we used version 2.0.9), [Cufflinks](http://cufflinks.cbcb.umd.edu/manual.html) (we used version 2.1.1), and the tablemaker binary (available in the [main Ballgown repository](https://github.com/alyssafrazee/ballgown)). These scripts assume "tophat" is in your path. See step (4) for more info on where we assume Cufflinks/Tablemaker are installed.
 
 #### (1) get transcripts to simulate from
-We simulated reads from human chromosome 22, Ensembl version 74. All transcripts can be downloaded [from this link](ftp://ftp.ensembl.org/pub/release-74/fasta/homo_sapiens/cdna/Homo_sapiens.GRCh37.74.cdna.all.fa.gz). Download this file, un-tar, and un-zip it, then run `get_chr22.R` to subset to chromsome 22. This produces `ensembl_chr22.fa`.
+We simulated reads from human chromosome 22, Ensembl version 74. All transcripts can be downloaded from `ftp://ftp.ensembl.org/pub/release-74/fasta/homo_sapiens/cdna/Homo_sapiens.GRCh37.74.cdna.all.fa.gz`. Download this file, un-tar, and un-zip it, then run `get_chr22.R` to subset to chromsome 22. This produces `ensembl_chr22.fa`.
 
 #### (2) get annotation files
 We used Illumina's iGenomes annotation files, available at [this link](http://tophat.cbcb.umd.edu/igenomes.shtml). Specifically, we used the Ensembl annotation (first link on the page). The `genes.gtf` file (located in the `Annotation/Genes` subfolder) was cleaned with the `clean_genes.R` script to produce our annotation file, `genes-clean.gtf`. This gtf file contains only chromosomes 1-22, X, and Y (the clean_genes script removes all others). 
