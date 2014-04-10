@@ -12,8 +12,24 @@ All simulation results from the paper were produced with scripts in this folder.
 * Figure 6a, 6b, and 6c
 * Supplementary Figure 1 (both panels)
 
+This code also gives numerical results presented in the "Statistical significance comparisons" section of the paper.
+
+### InSilicoDB
+The manuscript examines statistical significance results from two datasets downloaded from [InSilico DB](https://insilicodb.com/). This analysis includes Figure 2a and 2b, as well as numerical results in the "Statistical significance comparisons" section.
+
 ### GEUVADIS_preprocessing
 The manuscript includes a re-analysis of the [GEUVADIS RNA-sequencing dataset](http://www.geuvadis.org/web/geuvadis/rnaseq-project). This folder includes scripts for downloading and aligning reads, assembling the transcriptome, estimating transcript abundances, and organizing the expression measurements into the GEUVADIS ballgown object (see "GEUVADIS ballgown object" in the data section). The ballgown object was used for the eQTL and RIN analyses.
+
+### RIN
+Analysis investigating the relationship between RNA quality (RIN) and transcript expression was done with the script in this folder. This analysis includes:  
+* Figure 3 (both panels)
+* Figure 6d
+* Supplementary Figure 2
+
+This code also gives the numerical results in the "Analysis of quantitative covariates" (subsection of "Flexibility of statistical models") section of the manuscript.
+
+### eQTL
+
 
 ## data
 Data is currently available on Dropbox:
