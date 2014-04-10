@@ -8,10 +8,12 @@ set -e
 
 MAINDIR=/amber2/scratch/jleek/RNASeqSim/original/paper_sim
 Q=jabba #queue to run tophat/cufflinks/tablemaker/cuffdiff on
+ANNOTATIONPATH=/amber2/scratch/jleek/iGenomes-index
+SOFTWAREPATH=/home/bst/student/afrazee/software
 
-FASTA=/amber2/scratch/jleek/RNASeqSim/original/paper_sim/ensembl_chr22.fa
+FASTA=ensembl_chr22.fa
 UCSC=0 #1 for TRUE, 0 for FALSE
-ANNOTATION=/amber2/scratch/jleek/iGenomes-index/Homo_sapiens/Ensembl/GRCh37/Annotation/Genes/genes-clean.gtf
+ANNOTATION=genes-clean.gtf
 CHR="22" #must match ANNOTATION. FASTA transcripts should be from this chr.
 NSAMPLES=20
 FOLDCHANGE=6
@@ -19,19 +21,20 @@ FOLDERNAME=$MAINDIR/lognormal_directFPKM_geuvadis_FINALPAPER
 PERCENTDE=0.1
 MINLIBSIZE=150000
 MAXLIBSIZE=150000
+GEUVADISBG=/amber2/scratch/jleek/GEUVADIS/Ballgown/geuvadisbg.rda
 
 PYTHON=/home/bst/student/afrazee/software/Python-2.7.2/python
 SLIST=`seq -f %02.0f 1 $NSAMPLES` #list of samples to loop through
 mkdir -p $FOLDERNAME
 
 # #[1] simulate reads
-Rscript simReads_FPKM_direct_geuvadis.R $FASTA $UCSC $NSAMPLES $FOLDCHANGE $FOLDERNAME $PERCENTDE $MINLIBSIZE $MAXLIBSIZE
+Rscript simReads_FPKM_direct_geuvadis.R $FASTA $UCSC $NSAMPLES $FOLDCHANGE $FOLDERNAME $PERCENTDE $MINLIBSIZE $MAXLIBSIZE $GEUVADISBG
 
 
 
 # #[2] run TopHat
-transcriptomeIndex=/amber2/scratch/jleek/iGenomes-index/Homo_sapiens/Ensembl/GRCh37/Annotation/Transcriptome/known
-bowtieIndex=/amber2/scratch/jleek/iGenomes-index/Homo_sapiens/Ensembl/GRCh37/Sequence/Bowtie2Index/genome
+transcriptomeIndex=$ANNOTATIONPATH/Homo_sapiens/Ensembl/GRCh37/Annotation/Transcriptome/known
+bowtieIndex=$ANNOTATIONPATH/Homo_sapiens/Ensembl/GRCh37/Sequence/Bowtie2Index/genome
 dataDir=$FOLDERNAME/data
 
 for sample in $SLIST
@@ -56,10 +59,8 @@ mv $FOLDERNAME/tophat_??.sh* $FOLDERNAME/tophat_scripts/
 
 
 
-
-
 #[3] run Cufflinks
-CUFFLINKS=/home/bst/student/afrazee/software/cufflinks-2.1.1.Linux_x86_64/cufflinks
+CUFFLINKS=$SOFTWAREPATH/cufflinks-2.1.1.Linux_x86_64/cufflinks
 
 for sample in $SLIST
 do
@@ -81,10 +82,10 @@ mv $FOLDERNAME/cufflinks_??.sh* $FOLDERNAME/cufflinks_scripts
 
 
 # #[4] run Cuffmerge
-CUFFMERGE=/home/bst/student/afrazee/software/cufflinks-2.1.1.Linux_x86_64/cuffmerge
+CUFFMERGE=$SOFTWAREPATH/cufflinks-2.1.1.Linux_x86_64/cuffmerge
 ASSEMBLYFILE=$FOLDERNAME/assemblies/assemblies.txt
 OUTDIR=$FOLDERNAME/assemblies/merged
-REFSEQ=/amber2/scratch/jleek/iGenomes-index/Homo_sapiens/Ensembl/GRCh37/Sequence/Bowtie2Index/genome.fa
+REFSEQ=$ANNOTATIONPATH/Homo_sapiens/Ensembl/GRCh37/Sequence/Bowtie2Index/genome.fa
 
 $CUFFMERGE -s $REFSEQ -o $OUTDIR $ASSEMBLYFILE
 
@@ -96,7 +97,7 @@ $CUFFMERGE -s $REFSEQ -o $OUTDIR $ASSEMBLYFILE
 #[5] run Tablemaker
 MERGEDASSEMBLY=$OUTDIR/merged.gtf
 OUTDIR=$FOLDERNAME/ballgown
-TABLEMAKER=/home/bst/student/afrazee/software/ballgown-preproc
+TABLEMAKER=$SOFTWAREPATH/tablemaker
 ALIGNMENTDIR=$FOLDERNAME/alignments
 
 for sample in $SLIST
@@ -113,7 +114,7 @@ done
 
 
 #[6] run Cuffdiff
-CUFFDIFF=/home/bst/student/afrazee/software/cufflinks-2.1.1.Linux_x86_64/cuffdiff
+CUFFDIFF=$SOFTWAREPATH/cufflinks-2.1.1.Linux_x86_64/cuffdiff
 
 # create comma-separate lists of samples!
 N1=$(( $NSAMPLES / 2 ))
@@ -139,15 +140,12 @@ $CUFFDIFF -p 4 -L group1,group2 -o $FOLDERNAME/cuffdiff $MERGEDASSEMBLY $group1 
 echo 'CUFFDIFF END'
 echo `date`
 
-# $PYTHON make_cuffdiff_script.py -n $NSAMPLES -d $FOLDERNAME -m $MERGEDASSEMBLY
-# sh $FOLDERNAME/cuffdiff.sh
+
+
 
 #[7] make sure tablemaker jobs have finished
 $PYTHON wait_for_tablemaker.py -n $NSAMPLES -d $FOLDERNAME/ballgown
 mkdir -p $FOLDERNAME/ballgown_scripts
 mv $FOLDERNAME/ballgown_??.sh* $FOLDERNAME/ballgown_scripts
 rm $FOLDERNAME/ballgown/*_done
-
-#[8] simulation analysis!
-Rscript analyzeSimulation.R $FOLDERNAME $ANNOTATION $CHR $UCSC
 
