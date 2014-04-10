@@ -24,4 +24,4 @@ biocLite("limma")
 * The GEUVADIS ballgown object (`geuvadisbg.rda`). Code to create this is in the [GEUVADIS_preprocessing folder](https://github.com/alyssafrazee/ballgown_code/tree/master/GEUVADIS_preprocessing) of this repo, or the object can be [directly downloaded](https://www.dropbox.com/s/kp5th9hgkq8ckom/geuvadisbg.rda).
 
 ### script
-After installing all the dependencies, run the script `rin_analysis.R`.
+After installing all the dependencies, run the script `rin_analysis.R`. As long as `geuvadisbg.rda` is in the working directory, you don't need to change any paths in this script.
