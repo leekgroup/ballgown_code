@@ -10,9 +10,9 @@ foldername = provided[5]
 percentde = as.numeric(provided[6])
 minlibsize = as.numeric(provided[7])
 maxlibsize = as.numeric(provided[8])
+bgpath = provided[9]
 
 # load libs
-library(devtools)
 library(polyester)
 library(ballgown)
 library(Biostrings)
@@ -36,7 +36,7 @@ if(UCSC){
 ntranscripts = length(transcripts)
 nde = round(percentde*ntranscripts)
 
-load('/amber2/scratch/jleek/GEUVADIS/Ballgown/geuvadisbg.rda') #geuvadisbg
+load(bgpath) #geuvadisbg, from shell script
 
 texpr_nozero = texpr(geuvadisbg)[rowMeans(texpr(geuvadisbg)) > 100, ]
 texpr_nozero[texpr_nozero==0] <- NA
