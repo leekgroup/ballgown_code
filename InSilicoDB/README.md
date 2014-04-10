@@ -12,7 +12,7 @@ Accession numbers are:
 * GSE36552 for the developmental cell type dataset
 * GSE37764 for the adenocarcinoma dataset
 
-To get these datasets:
+To get these datasets:  
 1. Go to insilicodb.com
 2. Create an account (free)
 3. At the "Welcome to InSilico DB!" screen, click the "Try for free" button
