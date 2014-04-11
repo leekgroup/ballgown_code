@@ -107,7 +107,7 @@ do
   $TABLEMAKER -q -W -G $MERGEDASSEMBLY -o $OUTDIR/sample${sample} $ALIGNMENTDIR/sample${sample}_accepted_hits.bam
   echo 'done' > $OUTDIR/sample${sample}_done
 EOF
-qsub -l mf=10G,h_vmem=3G,$Q -pe local 4 -M acfrazee+ballgownsim@gmail.com $FOLDERNAME/ballgown_$sample.sh 
+qsub -l mf=10G,h_vmem=3G,$Q -pe local 4 $FOLDERNAME/ballgown_$sample.sh 
 done
 
 
