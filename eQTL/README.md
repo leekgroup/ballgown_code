@@ -59,19 +59,17 @@ install.packages("devtools") #if needed
 install_github("ballgown", "alyssafrazee")
 install_github("RSkittleBrewer", "alyssafrazee")
 ```
-* output from `fit_eqtl_model.R` (or relevant downloaded output) -- should be two `.rda` files -- in working directory
-* eQTL results from the published GEUVADIS paper, available here: 
+* output from `fit_eqtl_model.R` and `get_genotypes.R` (or relevant downloaded output) in working directory:
+    - `GEUVADIS_genotypeData_maf05.rda` 
+    - `eQTL_GEUVADIS_imputed_list_cis_1e6.rda`
+    - `sig_eQTL_GEUVADIS_imputed_list_cis_1e6_annotated.rda`
+* eQTL results from the published GEUVADIS paper, available here or downloadable from [this link](http://www.ebi.ac.uk/arrayexpress/files/E-GEUV-1/analysis_results/): 
     - `EUR373.trratio.cis.FDR5.all.rs137.txt`
     - `YRI89.trratio.cis.FDR5.all.rs137.txt`
 * the GEUVADIS ballgown object: this can be downloaded [here](https://www.dropbox.com/s/kp5th9hgkq8ckom/geuvadisbg.rda) or created with the code in the [GEUVADIS_preprocessing subfolder](https://github.com/alyssafrazee/ballgown_code/tree/master/GEUVADIS_preprocessing) of this repo.
-* 
+================================
+
+Once all dependencies are downloaded, run `eqtl-analysis-geuvadis.R` to obtain the manuscript's results.
 
 
-
-
-
-### analysis steps  
-  1. Run `get_genotypes.R`, or download `GEUVADIS_genotypeData_maf05.rda` and `plink.mds`  
-
-_hey_ 
 
