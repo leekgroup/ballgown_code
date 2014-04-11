@@ -1,6 +1,6 @@
 ## timing results
 
-Timing results are presented in the manuscript for each preprocessing step in the analysis of the GEUVADIS dataset. Specifically we provide per-sample timing summaries for TopHat, Cufflinks, and Tablemaker. Code for these preprocessing steps is available in the [GEUVADIS_preprocessing subfolder] of this repo. The code here produces Figure 5 (all panels).
+Timing results are presented in the manuscript for each preprocessing step in the analysis of the GEUVADIS dataset. Specifically we provide per-sample timing summaries for TopHat, Cufflinks, and Tablemaker. Code for these preprocessing steps is available in the [GEUVADIS_preprocessing subfolder](https://github.com/alyssafrazee/ballgown_code/tree/master/GEUVADIS_preprocessing) of this repo. The code here produces Figure 5 (all panels).
 
 The manuscript also gives timing results for a small simulated dataset, scenario #1 as described in the [simulations subfolder](https://github.com/alyssafrazee/ballgown_code/tree/master/simulations) of this repo (the subfolder also contains code for the simulations).
 
@@ -22,7 +22,6 @@ I used the `analyze_efficiency.py` script to analyze the Cufflinks and Tablemake
 ```
 python analyze_efficiency.py --email myemail@gmail.com --alias myemail+gcufflinks@gmail.com --limit 1000 --outfile cufflinks_times.txt
 python analyze_efficiency.py --email myemail@gmail.com --alias myemail+gtablemaker@gmail.com --limit 1000 --outfile tablemaker_times.txt
-
 ```
 Learn about `analyze_efficiency.py` and its dependencies [here](https://github.com/alyssafrazee/efficiency_analytics) and [here](http://alyssafrazee.com/efficiency-analytics.html). This repo contains `cufflinks_times.txt` and `tablemaker_times_all.txt` (the `time` column here is the `walltime` column output from `analyze_efficiency.py`)
 
