@@ -5,7 +5,7 @@ This code performs the eQTL (Expression Quantitative Trait Loci) analysis in the
 Specifically, this code (`eqtl-analysis-geuvadis.R`) produces:  
 * Figure 4 (both panels)
 * Supplementary Figure 3 (both panels)
-* Numerical results in the "Expression quantitative trait locus analysis" section of the main manuscript (subsection of "Flexibility of statisticsl models") and in the "eQTL analysis" section of the supplement (subsection of "Data Analyses").
+* Numerical results in the "Expression quantitative trait locus analysis" section of the main manuscript (subsection of "Flexibility of statistical models") and in the "eQTL analysis" section of the supplement (subsection of "Data Analyses").
 
 ### data and dependencies
 Running `eqtl-analysis-geuvadis.R` requires:

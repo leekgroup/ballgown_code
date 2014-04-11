@@ -1,7 +1,7 @@
 Code for analysis in Ballgown manuscript
 =============
 
-Pardon our dust!  We're cleaning up our scripts right now, but we'll be pushing all the code to this repo within the next few days.
+Data and code to reproduce the analyses in the [Ballgown manuscript](http://biorxiv.org/content/early/2014/03/30/003665) is available in this repository. Larger data files are hosted externally, but this repository contains links. (Some links are not yet live, but will be working ASAP).
 
 ## scripts/code
 Scripts for each analysis section are available in the relevant subfolder.
@@ -29,35 +29,24 @@ Analysis investigating the relationship between RNA quality (RIN) and transcript
 This code also gives the numerical results in the "Analysis of quantitative covariates" (subsection of "Flexibility of statistical models") section of the manuscript.
 
 ### eQTL
+Analysis of Expression Quantitative Trait Loci in the GEUVADIS dataset. Specifically this analysis includes:
+* Figure 4 (both panels)
+* Supplementary Figure 3 (both panels)
+* Numerical results in the "Expression quantitative trait locus analysis" section of the main manuscript (subsection of "Flexibility of statistical models") and in the "eQTL analysis" section of the supplement (subsection of "Data Analyses").
 
+### timing
+Computational times for many of the analyses presented in the manuscript. Specifically this folder includes code for:
+* Figure 5 (all panels)
+* All timing results in the "Computational time comparison" section 
 
 ## data
-Data is currently available on Dropbox:
+The following data is currently available on Dropbox. Other relevant data is stored in the subfolders. All Dropbox links are also referenced in subfolder README files.
 
-#### Results of MatrixEQTL for GEUVADIS 
-
-https://www.dropbox.com/s/c3r3bgsuhs2s07g/eQTL_GEUVADIS_imputed_list_cis_1e6.rda
-
-#### Results from MatrixEQTL analysis annotated with Ensembl.
-
-https://www.dropbox.com/s/z3eb39zbq44ydov/eQTL_GEUVADIS_imputed_list_cis_1e6_annotated.rda
-
-#### Filtered GEUVADIS genotypes
-
-https://www.dropbox.com/s/xb58k5kedj8ji35/GEUVADIS_genotypeData_maf05.rda
-
-#### Top 3PCS from Genotype Data
-
-https://www.dropbox.com/s/g8d9tyc6hky5nwu/plink.mds
-
-#### Annotation files
-
-https://www.dropbox.com/s/woacfjxql7gxhnt/pop_data_withuniqueid.txt
-https://www.dropbox.com/s/rg63qtuws2liz9r/GD667.QCstats.masterfile.txt
-
-#### GEUVADIS ballgown object
-
-https://www.dropbox.com/s/kp5th9hgkq8ckom/geuvadisbg.rda
-
-
+* [Results of MatrixEQTL for GEUVADIS](https://www.dropbox.com/s/c3r3bgsuhs2s07g/eQTL_GEUVADIS_imputed_list_cis_1e6.rda) (.rda)
+* [Results from MatrixEQTL analysis annotated with Ensembl](https://www.dropbox.com/s/z3eb39zbq44ydov/eQTL_GEUVADIS_imputed_list_cis_1e6_annotated.rda) (.rda)
+* [Filtered GEUVADIS genotypes](https://www.dropbox.com/s/xb58k5kedj8ji35/GEUVADIS_genotypeData_maf05.rda) (.rda)
+* [Top 3 principal components from GEUVADIS genotype data](https://www.dropbox.com/s/g8d9tyc6hky5nwu/plink.mds) (.mds; created with PLINK)
+* [GEUVADIS quality-control statistics](https://www.dropbox.com/s/rg63qtuws2liz9r/GD667.QCstats.masterfile.txt) (.txt)
+* [GEUVADIS population information](https://www.dropbox.com/s/woacfjxql7gxhnt/pop_data_withuniqueid.txt) (.txt) - matched to IDs in quality-control statistics file
+* [GEUVADIS ballgown object](https://www.dropbox.com/s/kp5th9hgkq8ckom/geuvadisbg.rda) (.rda)
 
