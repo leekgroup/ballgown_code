@@ -1,5 +1,4 @@
 jobid	node	walltime	systime	memory	memunit	status
-cuffmerge.sh	compute-0-29.local	2.0025	6.73333333333	5.600	G	0
 NA20828_accepted_hits.bam_cufflinks.sh	compute-0-48.local	2.3175	2.7	6.795	G	0
 NA20803_accepted_hits.bam_cufflinks.sh	compute-0-46.local	3.04555555556	3.61666666667	7.648	G	0
 NA20797_accepted_hits.bam_cufflinks.sh	compute-0-46.local	3.17333333333	1.35	8.933	G	0
