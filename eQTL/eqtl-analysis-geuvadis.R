@@ -1,156 +1,128 @@
-### do eqtl analysis on geuvadis data
-### run AFTER geuvadis_cis_eqtl-pvaluehist.R
+### get results of eqtl analysis on geuvadis data
+### run AFTER fit_eqtl_model.R
 
 library(MatrixEQTL)
-
-## Install with
-## library(devtools)
-## install_github("ballgown","alyssafrazee"))
 library(ballgown)
-
-## Install with
-## library(devtools)
-## install_github("RSkittleBrewer","alyssafrazee"))
 library(RSkittleBrewer)
 
 ## A useful string substitution function
-## (now included in ballgown packages)
+## (now included in ballgown package, not exported)
 ss = function(x, pattern, slot=1,...) sapply(strsplit(x,pattern,...), "[", slot)
 
-
-load("eQTL_GEUVADIS_imputed_list_cis_1e6.rda")
+load("eQTL_GEUVADIS_imputed_list_cis_1e6.rda") #output from fit_eqtl_model.R
 counts = me$cis$hist.counts
 breaks = me$cis$hist.bins
 ind = rep(1:100,each=50)
-
 counts100 = tapply(counts,ind,sum)
 breaks100 = c(0,tapply(breaks[2:5001],ind,max))
 wsize = diff(breaks100)[1]
 density100 = counts100/(wsize*sum(counts100))
-
-pdf(file="global-check-eqtl.pdf",height=5,width=10)
-par(mfrow=c(1,2),mar=c(5,5,3,3))
-
-## Histogram
-
 hh = list(breaks=breaks100,counts=counts100,density = density100)
 class(hh) = "histogram"
-plot(hh,col="grey",freq=FALSE,ylab="Density",xlab="P-value",main="",
-     cex.lab=1.2,cex.axis=1.2)
-abline(h=1,col="dodgerblue",lwd=3)
 
-## QQ-plot - have to do transforms to 
-## turn histograms into qq-plots here
-
-probs = cumsum(counts/sum(counts))
-plot(-log10(breaks[2:5001]),rev(-log10(1-probs)),
-     xlab="Theoretical Quantiles",ylab="Empirical Quantiles",
-     bg="dodgerblue",col="black",pch=21,
-     cex.lab=1.2,cex.axis=1.2)
-abline(c(0,1),col="grey",lwd=3)
+## SUPPLEMENTARY FIGURE 3a
+pdf("supp_figure3a.pdf")
+    plot(hh,col="grey",freq=FALSE,ylab="Density",xlab="P-value",main="",
+        cex.lab=1.2,cex.axis=1.2)
+    abline(h=1,col="dodgerblue",lwd=3)
 dev.off()
 
-## Get pi0 estimate with lambda =0.8
+## SUPPLEMENTARY FIGURE 3b
+## QQ-plot - have to do transforms to turn histograms into qq-plots here
+probs = cumsum(counts/sum(counts))
+pdf("supp_figure3b.pdf")
+    plot(-log10(breaks[2:5001]),rev(-log10(1-probs)),
+        xlab="Theoretical Quantiles",ylab="Empirical Quantiles",
+        bg="dodgerblue",col="black",pch=21,
+        cex.lab=1.2,cex.axis=1.2)
+    abline(c(0,1),col="grey",lwd=3)
+dev.off()
 
-lambda = 0.8
+
+## fraction of null hypotheses
+# method of Storey & Tibshirani, PNAS 2003
+lambda = 0.8 #tuning parameter
 ilambda = which.max(breaks >= lambda)  
-1-sum(counts[ilambda:5000])/(sum(counts)*(1-lambda))
+1-sum(counts[ilambda:5000])/(sum(counts)*(1-lambda)) #0.058 = 5.8% of SNP/transcript pairs show DE
+sum(counts[ilambda:5000])/(sum(counts)*(1-lambda)) #0.942 = \hat{\pi_0}
 
 
+load("sig_eQTL_GEUVADIS_imputed_list_cis_1e6_annotated.rda") #output from fit_eqtl_model.R
 
-## Load the cis-eQTL from geuvadis-cis-eqtl.R
-
-load("sig_eQTL_GEUVADIS_imputed_list_cis_1e6_annotated.rda")
-
-dim(sig)
+dim(sig) #2253868 x 14
 sig = sig[sig$FDR < 0.01, ]
-length(unique(sig$snps))
-length(unique(sig$gene))
-gidlist=  as.list(sig$ensemblGeneID)
+length(unique(sig$snps)) #665851
+length(unique(sig$gene)) #17276
+gidlist = as.list(sig$ensemblGeneID)
 maxgenes = max(sapply(gidlist,length))
 
 ## Number of unique genes
-length(unique(unlist(gidlist)))
+length(unique(unlist(gidlist))) #10,524 (mistyped in original manuscript as 10624)
 
 ## Number of unique transcripts (the matrixeqtl package refers
 ## to the gene expression values as genes, but we ran the analysis
 ## on FPKM values from transcripts so the gene column corresponds
-## to transcripts. 
-
-length(unique(unlist(as.list(sig$gene))))
+## to transcripts.)
+length(unique(unlist(as.list(sig$gene)))) #17,276 
       
 ## Find the number of annotated genes per transcript
 ngpert = sapply(gidlist,length)
 
 ## Calculate the number of transcripts with no annotated gene
-mean(ngpert==0)
+mean(ngpert==0) #0.14 - 14% of eQTL pairs ID-ed for transcripts not overlapping Ensembl-annotated transcripts
 
 uidmat = matrix(NA,nrow=length(gidlist),ncol=maxgenes)
 for(i in 1:maxgenes){
   uidmat[,i] = paste0(sig$snps, ":",sapply(sig$ensemblGeneID,"[", i))
   cat(i)
 }
+
 ## Load the cis-eQTL from CEU published by GEUVADIS
-
 eur = read.delim("EUR373.trratio.cis.FDR5.all.rs137.txt", as.is=TRUE)
-dim(eur)
-length(unique(eur$SNP_ID))
-length(unique(eur$PROBE_ID))
-length(unique(eur$GENE_ID))
-
+dim(eur) #116079 x 12
+length(unique(eur$SNP_ID)) #65613
+length(unique(eur$PROBE_ID)) #833
+length(unique(eur$GENE_ID)) #620
 
 eur$snps = paste("snp", eur$CHR_SNP, eur$SNPpos, sep="_")
 eur$ensemblGeneID = ss(eur$GENE_ID, "\\.")
 eur$uid = paste0(eur$snps, ":", eur$ensemblGeneID)
-mean(eur$uid %in% uidmat)
+mean(eur$uid %in% uidmat) # 57%
 
 ## Load the cis-eQTL from CEU published by GEUVADIS
 yri = read.delim("YRI89.trratio.cis.FDR5.all.rs137.txt", as.is=TRUE)
-dim(yri)
-length(unique(yri$SNP_ID))
-length(unique(yri$PROBE_ID))
-length(unique(yri$GENE_ID))
+dim(yri) # 4149 x 12
+length(unique(yri$SNP_ID)) #3488
+length(unique(yri$PROBE_ID)) #99
+length(unique(yri$GENE_ID)) #83
 
 yri$snps = paste("snp", yri$CHR_SNP, yri$SNPpos, sep="_")
 yri$ensemblGeneID = ss(yri$GENE_ID, "\\.")
 
 yri$uid = paste0(yri$snps, ":", yri$ensemblGeneID)
-mean(yri$uid %in% uidmat)
+mean(yri$uid %in% uidmat) #78% 
 
 
 
 
+## figure 4
 ## Load the ballgown object
-
 load("geuvadisbg.rda")
 load("sig_eQTL_GEUVADIS_imputed_list_cis_1e6_annotated.rda")
 sig = sig[sig$FDR < 0.01, ]
 
 ## phenotype data
 pd = pData(geuvadisbg)
-pd$dirname = as.character(pd$dirname)
-pd$IndividualID = ss(pd$dirname, "_", 1)
-
-##  external files for which replicates to keep
-pheno = read.delim("GD667.QCstats.masterfile.txt",as.is=TRUE)
-m = read.delim("pop_data_withuniqueid.txt",as.is=TRUE)
-pd$SampleID = m$sample_id[match(pd$dirname, m$folder_id)]
-pd = cbind(pd,pheno[match(pd$SampleID, rownames(pheno)),])
-pd$UseThisDup = pd$UseThisDupliate
-
-pData(geuvadisbg) = pd
 
 ## drop duplicates for this
 pd = pd[pd$UseThisDup == 1,]
 
 ## extract transcript data
 tName = texpr(geuvadisbg,"all")$t_name
-
 gownTrans = data(geuvadisbg)$trans
 gownTransFPKM =  texpr(geuvadisbg, "FPKM")
 colnames(gownTransFPKM) = ss(colnames(gownTransFPKM),"\\.",2)
 gownTransFPKM = gownTransFPKM[,pd$dirname] # put in same order post-drop
-
 gownTransMap = structure(geuvadisbg)$trans
 rownames(gownTransFPKM) = names(gownTransMap) = tName
 
@@ -175,8 +147,6 @@ snpMap = map
 ## genotype pcs
 #mds = read.table("plink.mds",header=TRUE, as.is=TRUE)
 #snpPCs = mds[match(pd$IndividualID, mds$IID),]
-
-
 
 noanno = which(ngpert==0)
 sigNoA = sig[noanno,]
@@ -209,19 +179,24 @@ tmpSnp = snp2[snpInd[1],]
 sigNoA[which((sigNoA$gene==tName[transInd[index]]) & (sigNoA$snps==rownames(snp2)[snpInd[1]])),]
 
 ## Confirm it is differentially expressed
-summary(lm(tmpGene ~ as.factor(tmpSnp)))
+summary(lm(tmpGene ~ as.factor(tmpSnp))) #significant result
 
-pdf(file="eqtl-plot.pdf",height=6,width=12)
-par(mfrow=c(1,2),mar=c(5,5,5,5))
+
+######## FIGURE 4a
 wild = RSkittleBrewer('wildberry')
-
 ## Plot transcript structure
-plotTranscripts("XLOC_000651",geuvadisbg,legend=FALSE,customCol=wild[c(1,2,1)],main="Chr1:64193406-64195282")
-
-## Plot truly de transcript
-boxplot(tmpGene ~ tmpSnp,border=wild[2],lwd=2,range=0,ylab="FPKM",xlab="Copies of MA for SNP Chr1:Pos 64122505")
-points(jitter(tmpSnp+1),tmpGene,col="black",bg=wild[2],cex=2,pch=21)
+pdf('figure4a.pdf')
+    plotTranscripts("XLOC_000651",geuvadisbg,legend=FALSE,customCol=wild[c(1,2,1)],main="Chr1:64193406-64195282")
 dev.off()
+
+######## FIGURE 4b
+## Plot truly de transcript
+pdf('figure4b.pdf')
+    boxplot(tmpGene ~ tmpSnp,border=wild[2],lwd=2,range=0,ylab="FPKM",xlab="Copies of MA for SNP Chr1:Pos 64122505")
+    points(jitter(tmpSnp+1),tmpGene,col="black",bg=wild[2],cex=2,pch=21)
+dev.off()
+
+
 
 
 sigNoA[which((sigNoA$gene==tName[transInd[index]]) & (sigNoA$snps==rownames(snp2)[snpInd[1]])),]
