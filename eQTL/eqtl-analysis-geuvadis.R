@@ -87,7 +87,7 @@ length(unique(eur$GENE_ID)) #620
 eur$snps = paste("snp", eur$CHR_SNP, eur$SNPpos, sep="_")
 eur$ensemblGeneID = ss(eur$GENE_ID, "\\.")
 eur$uid = paste0(eur$snps, ":", eur$ensemblGeneID)
-mean(eur$uid %in% uidmat) # 57%
+mean(eur$uid %in% uidmat) #57%. So we discover 57% of what they did.
 
 ## Load the cis-eQTL from CEU published by GEUVADIS
 yri = read.delim("YRI89.trratio.cis.FDR5.all.rs137.txt", as.is=TRUE)
@@ -100,12 +100,12 @@ yri$snps = paste("snp", yri$CHR_SNP, yri$SNPpos, sep="_")
 yri$ensemblGeneID = ss(yri$GENE_ID, "\\.")
 
 yri$uid = paste0(yri$snps, ":", yri$ensemblGeneID)
-mean(yri$uid %in% uidmat) #78% 
+mean(yri$uid %in% uidmat) #78%. We discover 78% of what they did. 
 
 
 
 
-## figure 4
+## on the way to making figure 4:
 ## Load the ballgown object
 load("geuvadisbg.rda")
 load("sig_eQTL_GEUVADIS_imputed_list_cis_1e6_annotated.rda")
@@ -142,12 +142,6 @@ exprsPCs = prcomp(t(finalexp))$x[,1:3]
 load("GEUVADIS_genotypeData_maf05.rda")
 snp2 = snp[,pd$IndividualID]
 snpMap = map
-
-## Load genotype PCs
-## genotype pcs
-#mds = read.table("plink.mds",header=TRUE, as.is=TRUE)
-#snpPCs = mds[match(pd$IndividualID, mds$IID),]
-
 noanno = which(ngpert==0)
 sigNoA = sig[noanno,]
 t2g = indexes(geuvadisbg)$t2g
@@ -159,7 +153,6 @@ transInd= which(tName %in% sigNoA$gene)
 jtmp = rep(NA,100)
 for(i in 1:100){jtmp[i] = sum(t2g[transInd[i],2] == t2g[,2])}
 index = which(jtmp==3)
-
 
 ## Get the other trancripts with the same gene
 otrans = which(t2g[transInd[index],2] == t2g[,2])
@@ -175,11 +168,11 @@ snpInd = which(rownames(snp2) %in% sigNoA$snps[which(sigNoA$gene==tName[transInd
 tmpSnp = snp2[snpInd[1],]
 
 ## Get info on the SNP gene pair
-
 sigNoA[which((sigNoA$gene==tName[transInd[index]]) & (sigNoA$snps==rownames(snp2)[snpInd[1]])),]
 
 ## Confirm it is differentially expressed
 summary(lm(tmpGene ~ as.factor(tmpSnp))) #significant result
+
 
 
 ######## FIGURE 4a
@@ -197,18 +190,3 @@ pdf('figure4b.pdf')
 dev.off()
 
 
-
-
-sigNoA[which((sigNoA$gene==tName[transInd[index]]) & (sigNoA$snps==rownames(snp2)[snpInd[1]])),]
-# DataFrame with 1 row and 14 columns
-# snps           gene statistic       pvalue
-# <character>    <character> <numeric>    <numeric>
-#   1 snp_1_64122505 TCONS_00001509 -4.047636 6.077578e-05
-# FDR        beta      snpChr    snpPos transChr
-# <numeric>   <numeric> <character> <integer> <factor>
-#   1 0.008593987 -0.05381211        chr1  64122505     chr1
-# transStart  transEnd distStartMinusSnp      geneSymbol
-# <integer> <integer>         <integer> <CharacterList>
-#   1   64193406  64195282             70901                
-# ensemblGeneID
-# <CharacterList>
