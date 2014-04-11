@@ -67,6 +67,7 @@ install_github("RSkittleBrewer", "alyssafrazee")
     - `EUR373.trratio.cis.FDR5.all.rs137.txt`
     - `YRI89.trratio.cis.FDR5.all.rs137.txt`
 * the GEUVADIS ballgown object: this can be downloaded [here](https://www.dropbox.com/s/kp5th9hgkq8ckom/geuvadisbg.rda) or created with the code in the [GEUVADIS_preprocessing subfolder](https://github.com/alyssafrazee/ballgown_code/tree/master/GEUVADIS_preprocessing) of this repo.
+
 ================================
 
 Once all dependencies are downloaded, run `eqtl-analysis-geuvadis.R` to obtain the manuscript's results.
