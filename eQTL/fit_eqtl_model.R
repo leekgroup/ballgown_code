@@ -74,15 +74,15 @@ geneRange$txID = rownames(gownTransFPKM2)
 genepos = geneRange[,c("txID","seqnames","start","end")]
 colnames(genepos)[2] = "chr"
 
+####################### fit the model ##################################
 me = Matrix_eQTL_main(snps=theSnps, gene = exprs, 
 	cvrt = covs, output_file_name.cis = output_file_name,
 	pvOutputThreshold = 0, pvOutputThreshold.cis = 1e-3, 
 	useModel = modelLINEAR,pvalue.hist=5000,
 	snpspos = snpspos, genepos = genepos, cisDist=1e6)
 save(me, file="eQTL_GEUVADIS_imputed_list_cis_1e6.rda", compress=TRUE)
+########################################################################
 
-#### if session interrupted before this:
-# load("eQTL_GEUVADIS_imputed_list_cis_1e6.rda")
 eqtl = me$cis$eqtls
 eqtl$snps = as.character(eqtl$snps)
 eqtl$gene = as.character(eqtl$gene)
@@ -96,7 +96,7 @@ eqtl$transEnd = genepos$end[match(eqtl$gene, genepos$txID)]
 eqtl$distStartMinusSnp = eqtl$transStart - eqtl$snpPos
 eqtl = DataFrame(eqtl)
 
-## gtf
+## annotate to Ensembl genes
 gtf="Homo_sapiens.GRCh37.73_chrPrefix.gtf"
 genes = getGenes(gtf, gownTransMap2,attribute = "gene_name")
 names(genes) = names(gownTransMap2)
