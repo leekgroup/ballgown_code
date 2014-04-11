@@ -78,6 +78,9 @@ map$chr = paste0("chr", map$chr)
 rownames(snp) = rownames(map)
 colnames(snp) = fam$IID
 
+# how many snps?
+nrow(snp) #7,072,917
+
 save(map,snp, file="GEUVADIS_genotypeData_maf05.rda")
 
 ### get genotype PCs
