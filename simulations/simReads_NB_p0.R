@@ -62,6 +62,6 @@ write.table(ids[index], file=paste0(foldername,'/de_ids.txt'), quote=FALSE, row.
 save(nreads, file=paste0(foldername, '/nreads.rda'))
 
 # generate reads!
-outdir = paste0(foldername, '/data')
+outdir = paste0(foldername, '/data/')
 system(paste('mkdir -p', outdir))
 simulate_experiment_countmat(fasta=fasta, readmat=nreads, outdir=outdir)
