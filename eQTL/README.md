@@ -48,7 +48,7 @@ install_github("ballgown", "alyssafrazee")
 * the GEUVADIS ballgown object: this can be downloaded [here](https://www.dropbox.com/s/kp5th9hgkq8ckom/geuvadisbg.rda) or created with the code in the [GEUVADIS_preprocessing subfolder](https://github.com/alyssafrazee/ballgown_code/tree/master/GEUVADIS_preprocessing) of this repo.  
 * `GD667.QCstats.masterfile.txt` (quality control information) and `pop_data_withuniqueid.txt` (population information), both available in this repo. Code for creating `pop_data_withuniqueid.txt` is in the [GEUVADIS_preprocessing subfolder](https://github.com/alyssafrazee/ballgown_code/tree/master/GEUVADIS_preprocessing)
 * output from `get_genotypes.R` (or relevant downloaded output) in the `Genotypes` subdirectory of your working directory
-* Ensembl gene annotations, available (soon) [at this link]() as `Homo_sapiens.GRCh37.73_chrPrefix.gtf`. This file is the same as the file here: `ftp://ftp.ensembl.org/pub/release-73/gtf/homo_sapiens/Homo_sapiens.GRCh37.73.gtf.gz`, but with the prefix `chr` appended to all chromosome names.
+* Ensembl gene annotations, available [at this link](https://www.dropbox.com/s/4gd05ghjkurj170/Homo_sapiens.GRCh37.73_chrPrefix.gtf) as `Homo_sapiens.GRCh37.73_chrPrefix.gtf`. This file is the same as the file here: `ftp://ftp.ensembl.org/pub/release-73/gtf/homo_sapiens/Homo_sapiens.GRCh37.73.gtf.gz`, but with the prefix `chr` appended to all chromosome names.
 
 =================
 To run `eqtl-analysis-geuvadis.R`, you will need:
