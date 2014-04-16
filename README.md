@@ -49,4 +49,10 @@ The following data is currently available on Dropbox. Other relevant data is sto
 * [GEUVADIS quality-control statistics](https://www.dropbox.com/s/rg63qtuws2liz9r/GD667.QCstats.masterfile.txt) (.txt)
 * [GEUVADIS population information](https://www.dropbox.com/s/woacfjxql7gxhnt/pop_data_withuniqueid.txt) (.txt) - matched to IDs in quality-control statistics file
 * [GEUVADIS ballgown object](https://www.dropbox.com/s/kp5th9hgkq8ckom/geuvadisbg.rda) (.rda)
+* [Ensembl Genes from human chr1-22,X,Y -- iGenomes](https://www.dropbox.com/s/89iaagrkwlu0tbs/genes-clean.gtf) (.gtf)
+* [Ensembl Genes with chromosome names prefixed with "chr"](https://www.dropbox.com/s/4gd05ghjkurj170/Homo_sapiens.GRCh37.73_chrPrefix.gtf)
+* [Simulated RNA-seq reads: differential expression at FPKM level](https://www.dropbox.com/s/bqrusc1cpq51ecq/lognormalgeuvadis.zip)
+* [Simulated RNA-seq reads: differential expression at read-count level](https://www.dropbox.com/s/2e5gmasapnnzn29/nbp0.zip)
+* [Developmental cell types dataset, downloaded from InSilico DB](https://www.dropbox.com/s/b4d44s7vtpzb4im/GSE36552GPL11154_DGE_RNASeq_04ec2b6a46a9ddb8ef2083b9d8ba4e3c.tgz)
+* [Adenocarcinoma dataset, downloaded from InSilico DB](https://www.dropbox.com/s/ql7kb94fx7c5e44/GSE37764GPL10999_DGE_RNASeq_a9dc2c94672e4a51c036c76be9508164.tgz)
 
