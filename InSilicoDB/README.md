@@ -6,11 +6,9 @@ This code executes the analysis of two datasets from [InSilico DB](https://insil
 
 #### data from InSilico DB
 
-We downloaded our data from InSilico DB on March 5, 2014. In case this data changes, we have uploaded freezes of the data we used [here](). 
-
-Accession numbers are:
-* GSE36552 for the developmental cell type dataset
-* GSE37764 for the adenocarcinoma dataset
+We downloaded our data from InSilico DB on March 5, 2014. In case this data changes, we have uploaded freezes of the data we used:
+* Accession number GSE36552, [developmental cell type dataset](https://www.dropbox.com/s/b4d44s7vtpzb4im/GSE36552GPL11154_DGE_RNASeq_04ec2b6a46a9ddb8ef2083b9d8ba4e3c.tgz)
+* Accession number GSE37764, [adenocarcinoma dataset](https://www.dropbox.com/s/ql7kb94fx7c5e44/GSE37764GPL10999_DGE_RNASeq_a9dc2c94672e4a51c036c76be9508164.tgz)
 
 To get these datasets:  
   1. Go to [insilicodb.com](https://insilicodb.com/)
