@@ -44,11 +44,12 @@ Finally, you will need [TopHat](http://tophat.cbcb.umd.edu/) (for the paper, we 
 We simulated reads from human chromosome 22, Ensembl version 74. All transcripts can be downloaded from `ftp://ftp.ensembl.org/pub/release-74/fasta/homo_sapiens/cdna/Homo_sapiens.GRCh37.74.cdna.all.fa.gz`. Download this file, un-tar, and un-zip it, then run `get_chr22.R` to subset to chromsome 22. This produces `ensembl_chr22.fa`.
 
 #### (2) get annotation files
-We used Illumina's iGenomes annotation files, available at [this link](http://tophat.cbcb.umd.edu/igenomes.shtml). Specifically, we used the Ensembl annotation (first link on the page). The `genes.gtf` file (located in the `Annotation/Genes` subfolder) was cleaned with the `clean_genes.R` script to produce our annotation file, `genes-clean.gtf`. This gtf file contains only chromosomes 1-22, X, and Y (the clean_genes script removes all others). 
+We used Illumina's iGenomes annotation files, available at [this link](http://tophat.cbcb.umd.edu/igenomes.shtml). Specifically, we used the Ensembl annotation (first link on the page). The `ANNOTATIONPATH` variable in the shell scripts points to the folder containing the `Homo_Sapiens` directory that comes with the iGenomes index download. This is used in several places in these scripts.
 
-`genes-clean.gtf` will soon be available [here]().
+To create the `genes-clean.gtf` file (used in `sim_results.R`), the `genes.gtf` file (located in the `Annotation/Genes` subfolder) was processed with the `clean_genes.R` script. This `genes-clean.gtf` file contains only chromosomes 1-22, X, and Y (the clean_genes script removes all others). 
 
-The `ANNOTATIONPATH` variable in the shell scripts points to the folder containing the `Homo_Sapiens` directory that comes with the iGenomes index download.
+`genes-clean.gtf` is available [here](https://www.dropbox.com/s/89iaagrkwlu0tbs/genes-clean.gtf).
+
 
 #### (3) pre-build a transcriptome for TopHat
 During TopHat runs in the simulations, we aligned first to the transcriptome, then to the genome (i.e., we used TopHat's `-G` option). We pre-built a transcriptome index and used that build for all TopHat runs to avoid re-building every time. A script plus small dummy reads used to build the transcriptome index are in the `tophat_transcriptome` subfolder. The `ANNOTATIONPATH` environment variable should be the same as it is in the shell scripts in the main (`simulations`) directory.
@@ -88,10 +89,13 @@ bgresults = ballgown(dataDir='ballgown', samplePattern='sample')
 Code used to obtain results presented in the manuscript is in `sim_results.R`. That script needs three variables at the beginning:  
 * `fpkm_sim_dir` should point to `$FOLDERNAME` from `run_sim_directFPKM_geuvadis.sh` (i.e., the output folder from scenario #1)
 * `nb_sim_dir` should point to `$FOLDERNAME` from `run_sim_p00.sh`
-* `annotation` should point to `genes-clean.gtf` (see section (2))
+* `annotation` should point to `genes-clean.gtf` (see section (2); [downloadable here](https://www.dropbox.com/s/89iaagrkwlu0tbs/genes-clean.gtf))
 
 ### simulated reads
-Simulated reads used for the analysis in the paper will soon be available for download [here]().
+The simulated reads used for the analysis in the paper are available for download:
+* [FPKM simulation (scenario 1)](https://www.dropbox.com/s/bqrusc1cpq51ecq/lognormalgeuvadis.zip)
+* [Negative binomial simulation (scenario 2)](https://www.dropbox.com/s/2e5gmasapnnzn29/nbp0.zip)
+
  
 
 
