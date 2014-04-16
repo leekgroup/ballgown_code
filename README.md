@@ -1,7 +1,7 @@
 Code for analysis in Ballgown manuscript
 =============
 
-Data and code to reproduce the analyses in the [Ballgown manuscript](http://biorxiv.org/content/early/2014/03/30/003665) is available in this repository. Larger data files are hosted externally, but this repository contains links. (Some links are not yet live, but will be working ASAP).
+Data and code to reproduce the analyses in the [Ballgown manuscript](http://biorxiv.org/content/early/2014/03/30/003665) is available in this repository. Larger data files are hosted externally, but this repository contains links.
 
 ## scripts/code
 Scripts for each analysis section are available in the relevant subfolder.
