@@ -4,7 +4,7 @@ library(devtools)
 install_github('ballgown', 'alyssafrazee')
 library(ballgown)
 
-fpkm_sim_dir = '~/hopkins/research/_ballgown/ballgown_paper/simulation_results/directFPKM')
+fpkm_sim_dir = '~/hopkins/research/_ballgown/ballgown_paper/simulation_results/directFPKM'
 annotation = 'genes-clean.gtf' ### add path to genes-clean.gtf
 nb_sim_dir = '~/hopkins/research/_ballgown/ballgown_paper/simulation_results/NB'
 

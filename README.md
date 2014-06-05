@@ -1,7 +1,7 @@
 Code for analysis in Ballgown manuscript
 =============
 
-Data and code to reproduce the analyses in the [Ballgown manuscript](http://biorxiv.org/content/early/2014/03/30/003665) is available in this repository. Larger data files are hosted externally, but this repository contains links. (Some links are not yet live, but will be working ASAP).
+Data and code to reproduce the analyses in the [Ballgown manuscript](http://biorxiv.org/content/early/2014/03/30/003665) is available in this repository. Larger data files are hosted externally, but this repository contains links.
 
 ## scripts/code
 Scripts for each analysis section are available in the relevant subfolder.
@@ -49,4 +49,10 @@ The following data is currently available on Dropbox. Other relevant data is sto
 * [GEUVADIS quality-control statistics](https://www.dropbox.com/s/rg63qtuws2liz9r/GD667.QCstats.masterfile.txt) (.txt)
 * [GEUVADIS population information](https://www.dropbox.com/s/woacfjxql7gxhnt/pop_data_withuniqueid.txt) (.txt) - matched to IDs in quality-control statistics file
 * [GEUVADIS ballgown object](https://www.dropbox.com/s/kp5th9hgkq8ckom/geuvadisbg.rda) (.rda)
+* [Ensembl Genes from human chr1-22,X,Y -- iGenomes](https://www.dropbox.com/s/89iaagrkwlu0tbs/genes-clean.gtf) (.gtf)
+* [Ensembl Genes with chromosome names prefixed with "chr"](https://www.dropbox.com/s/4gd05ghjkurj170/Homo_sapiens.GRCh37.73_chrPrefix.gtf) (.gtf)
+* [Simulated RNA-seq reads: differential expression at FPKM level](https://www.dropbox.com/s/bqrusc1cpq51ecq/lognormalgeuvadis.zip) (.zip)
+* [Simulated RNA-seq reads: differential expression at read-count level](https://www.dropbox.com/s/2e5gmasapnnzn29/nbp0.zip) (.zip)
+* [Developmental cell types dataset, downloaded from InSilico DB](https://www.dropbox.com/s/b4d44s7vtpzb4im/GSE36552GPL11154_DGE_RNASeq_04ec2b6a46a9ddb8ef2083b9d8ba4e3c.tgz) (.tgz)
+* [Adenocarcinoma dataset, downloaded from InSilico DB](https://www.dropbox.com/s/ql7kb94fx7c5e44/GSE37764GPL10999_DGE_RNASeq_a9dc2c94672e4a51c036c76be9508164.tgz) (.tgz)
 
