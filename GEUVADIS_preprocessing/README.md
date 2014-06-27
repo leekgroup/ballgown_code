@@ -39,6 +39,8 @@ Once these are changed, run `sh run_tophat.sh`.
 
 NB: One script per sample will be written and submitted using qsub. In other words, this script writes and submits 667 scripts.
 
+Alignment files (output from this step) are available for download from ArrayExpress: http://www.ebi.ac.uk/arrayexpress/experiments/E-GEUV-6/. Upon submission, Files were validated using the checksums in `md5sums.txt`.
+
 ### (3) assemble transcriptomes
 Wait for all scripts submitted in step (2) to finish running.
 
