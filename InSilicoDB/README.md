@@ -29,11 +29,11 @@ install.packages('sqldf')
 install.packages('cummeRbund')
 install.packages('reshape')
 ```
-* The ballgown R package from GitHub:
+* The ballgown R package (alpha version, from GitHub):
 ```S
 install.packages('devtools') #if needed
 library(devtools)
-install_github('ballgown', 'alyssafrazee')
+install_github('ballgown', 'alyssafrazee', ref='alpha')
 ```
 
 ### script

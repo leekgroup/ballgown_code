@@ -9,15 +9,14 @@ This code executes the analysis of how RNA quality ([RIN](http://en.wikipedia.or
 ### dependencies
 To use this code, you will need:
 
-* The ballgown and RSkittleBrewer R packages from GitHub, the limma package from Bioconductor, and the splines package from CRAN: in R, run
+* The ballgown and RSkittleBrewer R packages from GitHub and the limma package from Bioconductor: in R, run
 ```S
 install.packages("devtools") #if needed
 library(devtools)
-install_github("ballgown", "alyssafrazee")
+install_github("ballgown", "alyssafrazee", ref="alpha")
 install_github("RSkittleBrewer", "alyssafrazee")
 source("http://bioconductor.org/biocLite.R")
 biocLite("limma")
-install.packages("splines")
 ```
 * The GEUVADIS ballgown object (`geuvadisbg.rda`). Code to create this is in the [GEUVADIS_preprocessing folder](https://github.com/alyssafrazee/ballgown_code/tree/master/GEUVADIS_preprocessing) of this repo, or the object can be [directly downloaded](https://www.dropbox.com/s/kp5th9hgkq8ckom/geuvadisbg.rda).
 

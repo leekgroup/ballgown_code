@@ -43,7 +43,7 @@ To run `fit_eqtl_model.R`, you will need:
 ```S
 install.packages("MatrixEQTL")
 install.packages("devtools") #if needed
-install_github("ballgown", "alyssafrazee")
+install_github("ballgown", "alyssafrazee", ref="alpha")
 ```
 * the GEUVADIS ballgown object: this can be downloaded [here](https://www.dropbox.com/s/kp5th9hgkq8ckom/geuvadisbg.rda) or created with the code in the [GEUVADIS_preprocessing subfolder](https://github.com/alyssafrazee/ballgown_code/tree/master/GEUVADIS_preprocessing) of this repo.  
 * `GD667.QCstats.masterfile.txt` (quality control information) and `pop_data_withuniqueid.txt` (population information), both available in this repo. Code for creating `pop_data_withuniqueid.txt` is in the [GEUVADIS_preprocessing subfolder](https://github.com/alyssafrazee/ballgown_code/tree/master/GEUVADIS_preprocessing)

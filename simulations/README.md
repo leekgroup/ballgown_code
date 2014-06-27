@@ -32,8 +32,8 @@ To download Ballgown and Polyester: in R, run:
 ```S
 install.packages("devtools") #if needed
 library(devtools)
-install_github("ballgown", "alyssafrazee")
-install_github("ballgown", "alyssafrazee", subdir="polyester")
+install_github("ballgown", "alyssafrazee", ref="alpha")
+install_github("polyester", "alyssafrazee")
 ```
 
 Additionally, we relied heavily on the Sun Grid Engine (SGE) scheduling system when running this pipeline, since this is what our department uses to schedule batch cluster jobs. In particular, the shell scripts in this folder contain `qsub` commands, indicating that a script is being submitted to the cluster to be run, so these lines will have to be modified if you want to run this code without using SGE. 
