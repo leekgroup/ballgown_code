@@ -20,6 +20,7 @@ len(set(hapmapids)) #464 unique hapmap samples
 ## sooo, we have 465 base samples + 35 + 168 replicates = 668
 ## one sample is missing from ENA.
 
+### population information
 sample_info = urllib2.urlopen("ftp://ftp-trace.ncbi.nih.gov/1000genomes/ftp/sequence.index")
 popdat = sample_info.readlines()
 pdrows = [x.split('\t') for x in popdat]
@@ -29,16 +30,33 @@ lookup = dict()
 for entry in pdrows[1:]:
     lookup[entry[idcol]] = entry[popcol]
 
+### sex information
+# import pandas #ugh HapMap uses excel
+# # had to pip install xlrd
+# hapmap_pheno = pandas.ExcelFile('/Users/alyssafrazee/Google Drive/hopkins/research/_ballgown/ballgown_code/GEUVADIS_preprocessing/HapMap_samples.xls')
+# hapmap_dat = hapmap_pheno.parse('4_pops')
+# enc = hapmap_pheno.parse('ENCODE')
+# this isn't enough data! :'( 
+
+hapmap_info = urllib2.urlopen("ftp://ftp-trace.ncbi.nih.gov/1000genomes/ftp/technical/working/20130606_sample_info/20130606_sample_info.txt")
+hapmap_lines = hapmap_info.readlines()
+hapmap_rows = [x.split('\t') for x in hapmap_lines]
+idcol = hapmap_rows[0].index('Sample')
+sexcol = hapmap_rows[0].index('Gender')
+sexlookup = dict()
+for entry in hapmap_rows[1:]:
+    sexlookup[entry[idcol]] = entry[sexcol]
+
 out_table = 'pop_data_withuniqueid.txt'
 errind = col_labels.index('run_accession')
 
 # add identifiers to this table (to look up in the table from the geuvadis authors, QCstats)
 ids = [x.split(';')[0].split('/')[-1][:-11] for x in sample_ftps]
 with open(out_table, 'w') as f:
-    f.write('sample_id\trun_id\thapmap_id\tpopulation\n')
+    f.write('sample_id\trun_id\thapmap_id\tpopulation\tsex\n')
     pos = 0
     for h in hapmapids:
-        f.write(ids[pos]+'\t'+table_rows[pos][errind]+'\t'+h+'\t'+lookup[h]+'\n')
+        f.write(ids[pos]+'\t'+table_rows[pos][errind]+'\t'+h+'\t'+lookup[h]+'\t'+sexlookup[h]+'\n')
         pos += 1
 
 
