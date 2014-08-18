@@ -9,16 +9,14 @@ This code executes the analysis of how RNA quality ([RIN](http://en.wikipedia.or
 ### dependencies
 To use this code, you will need:
 
-* The ballgown and RSkittleBrewer R packages from GitHub and the limma package from Bioconductor: in R, run
+* The RSkittleBrewer R package from GitHub, and the ballgown R package (version >= 0.99.3) from Bioconductor: in R, run
 ```S
 install.packages("devtools") #if needed
 library(devtools)
-install_github("ballgown", "alyssafrazee", ref="alpha")
-install_github("RSkittleBrewer", "alyssafrazee")
 source("http://bioconductor.org/biocLite.R")
-biocLite("limma")
+biocLite("ballgown")
 ```
-* The GEUVADIS ballgown object (`geuvadisbg.rda`). Code to create this is in the [GEUVADIS_preprocessing folder](https://github.com/alyssafrazee/ballgown_code/tree/master/GEUVADIS_preprocessing) of this repo, or the object can be [directly downloaded](https://www.dropbox.com/s/kp5th9hgkq8ckom/geuvadisbg.rda).
+* Two of the GEUVADIS ballgown objects: [`fpkm.rda`](http://files.figshare.com/1625419/fpkm.rda) and [`cov.rda`](http://files.figshare.com/1625417/cov.rda). Code to create these objects is in the [GEUVADIS_preprocessing folder](https://github.com/alyssafrazee/ballgown_code/tree/master/GEUVADIS_preprocessing) of this repo.
 
 ### script
-After installing all the dependencies, run the script `rin_analysis.R`. As long as `geuvadisbg.rda` is in the working directory, you don't need to change any paths in this script.
+After installing all the dependencies, knit the `RIN_analysis.Rmd` file as you would normally knit a `.Rmd` file (e.g., with the `knit()` command in R, or using the "knit to HTML" or "knit to PDF" options in RStudio). Make sure `fpkm.rda` and `cov.rda` are in the working directory.
