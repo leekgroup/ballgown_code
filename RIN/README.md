@@ -20,3 +20,5 @@ biocLite("ballgown")
 
 ### script
 After installing all the dependencies, knit the `RIN_analysis.Rmd` file as you would normally knit a `.Rmd` file (e.g., with the `knit()` command in R, or using the "knit to HTML" or "knit to PDF" options in RStudio). Make sure `fpkm.rda` and `cov.rda` are in the working directory.
+
+You can also [view the analysis here](http://htmlpreview.github.io/?https://github.com/alyssafrazee/ballgown_code/blob/master/RIN/RIN_analysis.html).
