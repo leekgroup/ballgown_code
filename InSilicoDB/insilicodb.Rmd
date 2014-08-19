@@ -1,0 +1,267 @@
+---
+title: "InSilicoDb Analysis"
+author: "Alyssa Frazee"
+date: "August 19, 2014"
+output: html_document
+---
+
+## analysis of publicly-available datasets with Cuffdiff, Ballgown, and EBSeq
+
+```{r, eval=FALSE, echo=FALSE}
+setwd('/Users/alyssafrazee/Google Drive/hopkins/research/_ballgown/ballgown_code/InSilicoDB')
+```
+
+```{r, message=FALSE, warning=FALSE}
+library(devtools)
+install_github('usefulstuff', 'alyssafrazee')
+
+library(ballgown)
+library(reshape2)
+library(limma)
+library(usefulstuff)
+library(EBSeq)
+```
+
+### dataset 1: cancer
+The first study we examined compares expression between lung adenocarcinoma (n=12) and normal (n=12) cells. Study information is [available here](http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE37764). (GEO/NCBI accession number GSE37764). 
+
+First we present the transcript-level differential expression results from Cuffdiff, version 2.2.1. (See other scripts in this folder for details on how Cuffdiff was run).
+
+```{r}
+transcripts = read.table('cancer/isoform_exp.diff', header=TRUE)
+rdata = read.table('cancer/isoforms.read_group_tracking', header=TRUE)
+fpkmtable = dcast(rdata, formula=tracking_id~replicate+condition, value.var='FPKM')
+hiexpr = which(rowMeans(fpkmtable[,-1]) > 1)
+length(hiexpr) 
+hiID = fpkmtable$tracking_id[hiexpr]
+hitranscripts = subset(transcripts, test_id %in% hiID)
+hist(hitranscripts$p_value[hitranscripts$status == "OK"], xlab='p-values, highly-expressed transcripts, status "OK"', main='Cuffdiff 2.2.1 p-values: cancer, transcripts', col='gray')
+```
+
+This is a _huge_ improvement over Cuffdiff 2.0.2! (Results from Cuffdiff 2.0.2 are available in InSilicoDb). The gene-level p-values are below:
+
+```{r}
+genes = read.table('cancer/gene_exp.diff', header=TRUE)
+hist(genes$p_value[genes$status=="OK"], main='Cuffdiff 2.2.1 p-values: cancer, genes', xlab='p-values, status "OK"', col='gray') 
+```
+
+Next we calculate Ballgown p-values for comparison:
+
+```{r}
+bgtable = fpkmtable[,-1]
+rownames(bgtable) = fpkmtable[,1]
+system.time(bgresults <- stattest(gowntable=bgtable, 
+    pData=data.frame(group=as.numeric(grepl('tumor', names(bgtable)))),
+    feature='transcript', covariate='group'))
+hist(bgresults$pval[bgresults$id %in% hiID], main='Ballgown p-values: cancer, transcripts', xlab='p-values, highly-expressed transcripts', col='gray')
+```
+
+Ballgown still appears to be calling more transcripts differentially expressed than Cuffdiff 2.2.1 (see the y-axis scales). 
+
+We will also compare Ballgown and Cuffdiff to EBSeq, another method for transcript-level differential expression analysis.
+
+```{r ebseqcancer, cache=TRUE}
+Data = acast(rdata, formula=tracking_id~replicate+condition, value.var='raw_frags')
+Conditions = rep(c('normal', 'tumor'), 12)
+IsoformNames = rownames(Data)
+iso_gene_relationship = read.table('cancer/isoform_exp.diff', 
+    colClasses=c('character', 'character', rep('NULL', 12)), header=TRUE)
+sum(IsoformNames != iso_gene_relationship$test_id) # expect 0
+IsosGeneNames = iso_gene_relationship$gene_id
+IsoSizes = MedianNorm(Data)
+NgList = GetNg(IsoformNames, IsosGeneNames)
+IsoNgTrun = NgList$IsoformNgTrun
+
+system.time(IsoEBOut <- EBTest(Data=Data, NgVector=IsoNgTrun, 
+    Conditions=as.factor(Conditions), sizeFactors=IsoSizes, maxround=10))
+```
+
+Check convergence:
+
+```{r, dependson='ebseqcancer'}
+IsoEBOut$Alpha
+IsoEBOut$Beta
+IsoEBOut$P
+```
+
+Convergence looks fine (all parameters are showing differences of < 1e-3 between the last few iterations).
+
+The relevant differential expression output from EBSeq is the posterior probability of differential expression. To be consistent with a q-value cutoff of 0.05, we will say that EBSeq called a transcript differentially expressed if its posterior probability of differential expression is at least 95%:
+
+```{r, dependson='ebseqcancer'}
+prob_de = IsoEBOut$PPDE
+sum(prob_de > 0.95) 
+sum(prob_de > 0.95) / length(prob_de)
+```
+
+So EBSeq calls `r 100*sum(prob_de > 0.95)/length(prob_de)` percent of the transcripts it tested differentially expressed. We compare this to Ballgown/Cuffdiff results:
+
+```{r}
+statq_new = p.adjust(bgresults$pval[bgresults$id %in% hiID], 'fdr')
+length(which(statq_new < 0.05)) 
+sum(statq_new < 0.05) / length(statq_new)
+cuffq_new = p.adjust(hitranscripts$p_value[hitranscripts$status == "OK"], 'fdr')
+length(which(cuffq_new < 0.05)) 
+sum(cuffq_new < 0.05) / length(cuffq_new)
+```
+
+So, in the cancer dataset, Ballgown calls `r 100*sum(statq_new < 0.05) / length(statq_new)` percent of its tested (highly-expressed) transcripts differentially expressed, and Cuffdiff calls `r 100*sum(cuffq_new < 0.05) / length(cuffq_new)` percent of its tested, highly-expressed transcripts differentially expressed.
+
+Here is a version of Figure 2a in the original manuscript, updated to use the most recent version of Cuffdiff:
+
+```{r}
+bhist(bgresults$pval[bgresults$id %in% hiID], fill='dodgerblue', alpha=0.6,
+    xlab="p-values", ylab='Frequency', main="Tumor vs. control")
+bhist(hitranscripts$p_value[hitranscripts$status == "OK"], fill='orange', alpha=0.6, 
+    add=TRUE)
+```
+
+Again, Cuffdiff is looking much more reasonable than version 2.0.2. Ballgown is still calling more transcripts differentially expressed, though.
+
+### dataset 2: cell types
+
+The second study compares expression in two types of early-development human cells: embryonic stem cells (n=34) and pre-implantation blastomeres (n=78). Study information is [available here](http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE36552). (GEO/NCBI accession number GSE36552). 
+
+We have already run Cuffdiff 2.2.1 on this dataset (see other scripts in this folder). Here we read in and reshape the Cuffdiff output: 
+
+```{r}
+transcripts = read.table('celltype/isoform_exp.diff', header=TRUE)
+rdata = read.table('celltype/isoforms.read_group_tracking', header=TRUE)
+fpkmtable = dcast(rdata, formula=tracking_id~replicate+condition, value.var='FPKM')
+hiexpr = which(rowMeans(fpkmtable[,-1]) > 1)
+length(hiexpr) 
+hiID = fpkmtable$tracking_id[hiexpr]
+hitranscripts = subset(transcripts, test_id %in% hiID)
+hist(hitranscripts$p_value[hitranscripts$status == "OK"], xlab='p-value (highly-expressed, status "OK")', main='Cuffdiff 2.2.1 p-value histogram', col='gray')
+```
+
+This histogram looks _much_ more reasonable than the one from the Cuffdiff version (2.0.2) used to create the dataset that's actually available in InSilicoDb. Let's also check the gene-level p-value histogram:
+
+```{r}
+genes = read.table('celltype/gene_exp.diff', header=TRUE)
+hist(genes$p_value[genes$status=="OK"], xlab='p-value (status "OK")', main="Cuffdiff 2.2.1 p-value histogram (genes)", col='gray')
+```
+
+The gene-level histogram also looks reasonable for Cuffdiff 2.2.1.
+
+The next block of code does Ballgown's statistical analysis:
+
+```{r}
+bgtable = fpkmtable[,-1]
+rownames(bgtable) = fpkmtable[,1]
+system.time(bgresults <- stattest(gowntable=bgtable, 
+    pData=data.frame(group=as.numeric(grepl('embryonic', names(bgtable)))),
+    feature='transcript', covariate='group'))
+hist(bgresults$pval[bgresults$id %in% hiID], main='Ballgown p-value histogram', xlab='p-value (highly-expressed transcripts)', col='gray')
+bgres_hi = bgresults[bgresults$id %in% hiID,]
+bgres_hi$qval = p.adjust(bgres_hi$pval, 'fdr')
+sum(bgres_hi$qval < 0.05)
+```
+
+Using Ballgown's default statistical methods to detect differential expression between cell types in this dataset is slightly more liberal than using Cuffdiff's statistical method, though we see major improvements from Cuffdiff 2.0.2 to Cuffdiff 2.2.1. 
+
+We can show that the Ballgown results are basically equivalent to analyzing the "cell type" coefficient using limma:
+
+```{r}
+# calculate library size adjustment term manually:
+lib_adj = apply(bgtable, 2, function(x){
+    lognz = log2(x[x!=0] + 1)
+    q3 = quantile(lognz, 0.75)
+    sum(lognz[lognz<q3])
+})
+y = log2(bgtable+1)
+group = as.numeric(grepl('embryonic', names(bgtable)))
+x = model.matrix(~group + lib_adj)
+fit = lmFit(y, x)
+fit = eBayes(fit, trend=TRUE)
+limma_p = fit$p.value[,2][names(fit$p.value[,2]) %in% hiID]
+hist(limma_p, xlab='p-value (highly-expressed transcripts)', main='Limma p-value histogram', col='gray')
+```
+
+The limma results are almost exactly the same as the ballgown results:
+
+```{r}
+# make sure everything is in the same order: expect 0
+sum(names(limma_p) != bgres_hi$id)
+sum(names(limma_p) != hitranscripts$test_id) 
+plot(limma_p, bgres_hi$pval, xlab='Limma p-value', ylab='Ballgown p-value')
+cor(limma_p, bgres_hi$pval)
+cor(limma_p, hitranscripts$p_value)
+sum(limma_p == bgres_hi$pval) # not *exactly* equal
+hist(abs(limma_p - bgres_hi$pval), main='Absolute differences between Limma and Ballgown p-values', col='gray')
+```
+
+Here is an updated version of Figure 2b, with the new Cuffdiff version's results shown.
+
+```{r}
+bhist(bgresults$pval[bgresults$id %in% hiID], fill='dodgerblue', 
+    alpha=0.6, xlab="p-values", ylab='Frequency', 
+    main="Enbryonic stem cells vs. preimplantation blastomeres")
+bhist(hitranscripts$p_value[hitranscripts$status == "OK"], 
+    fill='orange', alpha=0.6, add=TRUE)
+legend('topright', col=c('dodgerblue', 'orange'), pch=c(15,15), c('Ballgown', 'Cuffdiff'))
+```
+
+Here are the numbers presented in the "statistical significance comparison" section of the manuscript. We re-compute q-values using only the p-values from the highly-expressed (mean FPKM>1) transcripts:
+
+We can also run EBSeq on this same dataset, to get a feel for how other differential expression methods are performing here:
+
+```{r ebseq, cache=TRUE}
+Data = acast(rdata, formula=tracking_id~replicate+condition, value.var='raw_frags')
+Conditions = ballgown:::ss(colnames(Data), pattern='_', slot=2)
+IsoformNames = rownames(Data)
+iso_gene_relationship = read.table('celltype/isoform_exp.diff', 
+    colClasses=c('character', 'character', rep('NULL', 12)), header=TRUE)
+sum(IsoformNames != iso_gene_relationship$test_id) # expect 0
+IsosGeneNames = iso_gene_relationship$gene_id
+IsoSizes = MedianNorm(Data)
+NgList = GetNg(IsoformNames, IsosGeneNames)
+IsoNgTrun = NgList$IsoformNgTrun
+
+system.time(IsoEBOut <- EBTest(Data=Data, NgVector=IsoNgTrun, 
+    Conditions=as.factor(Conditions), sizeFactors=IsoSizes, maxround=20))
+```
+
+Check convergence of the EBSeq method:
+
+```{r, dependson='ebseq'}
+IsoEBOut$Alpha
+IsoEBOut$Beta
+IsoEBOut$P
+```
+
+Convergence looks okay (though estimates aren't quite differing by less than 1e-03 yet, especially in the Beta parameter. 
+
+The relevant differential expression output from EBSeq is the posterior probability of differential expression. To be consistent with a q-value cutoff of 0.05, we will say that EBSeq called a transcript differentially expressed if its posterior probability of differential expression is at least 95%:
+
+```{r, dependson='ebseq'}
+prob_de = IsoEBOut$PPDE
+sum(prob_de > 0.95) 
+sum(prob_de > 0.95) / length(prob_de)
+```
+
+So EBSeq calls `r 100*sum(prob_de > 0.95)/length(prob_de)` percent of the transcripts it tested differentially expressed. We compare this to Ballgown/Cuffdiff results:
+
+```{r}
+# readjust q-values using high transcripts only
+statq_new = p.adjust(bgresults$pval[bgresults$id %in% hiID], 'fdr')
+length(which(statq_new < 0.05)) #9701
+sum(statq_new < 0.05) / length(statq_new)
+cuffq_new = p.adjust(hitranscripts$p_value[hitranscripts$status == "OK"], 'fdr')
+length(which(cuffq_new < 0.05)) #6816
+sum(cuffq_new < 0.05) / length(cuffq_new)
+```
+
+So Ballgown calls `r 100*sum(statq_new < 0.05) / length(statq_new)` percent of its tested (highly-expressed) transcripts differentially expressed, and Cuffdiff calls `r 100*sum(cuffq_new < 0.05) / length(cuffq_new)` percent of its tested, highly-expressed transcripts differentially expressed.
+
+These two analyses demonstrate a few things:  
+* Cuffdiff 2.2.1 gives much more reasonable results than Cuffdiff 2.0.2 on these datasets. (The troublesome conservative bias observed before in Cuffdiff seems to have been somewhat resolved)
+* Cuffdiff is a bit more conservative than Ballgown, which is a bit more conservative than EBSeq. Ballgown also makes essentially the same calls as limma. This indicates that Ballgown's default statistical methods are reasonable (at least as compared to other appropriate differential expression models). See the negative control section for evidence that Ballgown and EBSeq are not overly liberal in their differential expression calls.
+* Ballgown's statistical modeling functions are much faster on these datasets than Cuffdiff or EBSeq.
+
+### Version / Session Info
+```{r, results='markup'}
+sessionInfo()
+```
+
+
