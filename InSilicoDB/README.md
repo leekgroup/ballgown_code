@@ -39,3 +39,19 @@ install_github('ballgown', 'alyssafrazee', ref='alpha')
 ### script
 After getting the data and installing the required R libraries, run the script `insilicodb.R`. As long as you put the downloaded data into your working directory, you don't need to change any paths in this script.
 
+### analysis with another Cuffdiff version
+
+The data from InSilicoDb was analyzed with Cuffdiff 2.0.2. We also analyzed this data with Cuffdiff 2.2.1. (Scripts/description for that analysis are coming very, very soon). 
+
+The R analysis for that data can be run by [knitting](http://yihui.name/knitr/) the file `insilicodb.Rmd`. You will need to have subdirectories called `cancer` and `celltype` in your working directory, and they should contain the Cuffdiff 2.2.1 output (LINK COMING). You may also need to install some R packages:
+
+```r
+install.packages('devtools')
+install.packages('reshape2')
+source('http://bioconductor.org/biocLite.R')
+biocLite('ballgown')
+biocLite('EBSeq')
+```
+
+You can also view my knitted report [here](http://htmlpreview.github.io/?https://github.com/alyssafrazee/ballgown_code/blob/master/InSilicoDB/insilicodb.html).
+
