@@ -70,15 +70,11 @@ Change variables in `run_tablemaker.sh`:
 
 Then run `sh run_tablemaker.sh`. As before, NB: one script per sample (667 samples) will be written and submitted using qsub.
 
-### (6) create the GEUVADIS ballgown object
-Code to do this is in `make_bgobj.R`. 
+### (6) create the GEUVADIS ballgown objects
+Code to do this is in `make_rda.R`. 
 
-Change some variables in this script:  
-* `dataDir` should point to the folder containing `tablemaker` output. Typically this will be the path in `BGOUTDIR` in `run_tablemaker.sh`, up to but not including `$SAMPLE`. There should be a `/` at the end of `dataDir`.
-* `bamDir` should be the same as `BDIR` in `run_tophat.sh`, `run_cufflinks.sh`, and `run_tablemaker.sh` (with `/` at the end)
-
-Then run `Rscript make_bgobj.R` or `R CMD BATCH make_bgobj.R`. (Making the ballgown object will likely take about two hours, so it's probably best to run it as a non-interactive batch job).
-
+This code will not work unless your `ballgown` package version is at least 0.99.2. It assumes all Tablemaker output is in a folder called `Ballgown` in the working directory. (Change this if `BGOUTDIR` was something else in step (5)). A lot of compression is happening here, so the code takes several hours to run.
+The results are available for download [here](http://figshare.com/articles/GEUVADIS_Processed_Data/1130849).
 
 
 
