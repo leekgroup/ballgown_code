@@ -9,36 +9,34 @@ This code executes the simulations presented in the [ballgown manuscript](http:/
 ### two simulations
 Two separate simulation scenarios are presented in the manuscript. 
 
-1. The first scenario (described in the main manuscript) involves setting each transcript's expression level using FPKM, and accordingly, adding differential expression at the FPKM level. In other words, transcripts differentially expressed at 6x fold change had an average FPKM that was 6x greater in the overexpressed group. The number of reads to generate from each transcript was then calculated by multiplying the FPKM by the transcript length (in kilobases) and by a library size factor (in millions of reads). 
+1. The first scenario (described in the main manuscript) involves setting each transcript's expression level using FPKM, and accordingly, adding differential expression at the FPKM level. In other words, transcripts differentially expressed at 6x fold change had an average FPKM that was 6x greater in the overexpressed group. The number of reads to generate from each transcript was then calculated by multiplying the FPKM by the transcript length (in kilobases) and by a library size factor (in millions of reads). Relevant code is in the `FPKM` folder.
 
-2. The second scenario (described in the manuscript supplement) involves drawing the number of reads to generate from each transcript from a negative binomial distribution. The transcript's length has no effect on the number of reads simulated from it. Scripts for this scenario are 
+2. The second scenario (described in the manuscript supplement) involves drawing the number of reads to generate from each transcript from a negative binomial distribution. The transcript's length has no effect on the number of reads simulated from it. Scripts for this scenario are in the `NB` folder.
 
-Specific details about parameters chosen for these simulations are available in the [manuscript supplement](http://biorxiv.org/content/biorxiv/suppl/2014/03/30/003665.DC1/003665-1.pdf), Section 3 (Simulation studies), and all code is available in this folder.
-
-The scripts `run_sim_directFPKM_geuvadis.sh` and `simReads_FPKM_direct_geuvadis.R` belong to scenario #1. The scripts `run_sim_p00.sh` and `sim_NB_p0.R` belong to scenario #2. 
+Specific details about parameters chosen for these simulations are available in the [manuscript supplement](http://biorxiv.org/content/biorxiv/suppl/2014/03/30/003665.DC1/003665-1.pdf), Section 3 (Simulation studies).
 
 ### how to use this code
 
 #### (0) get dependencies
 This code depends on R and the Rscript command line utility, the Biostrings, Ballgown, and Polyester R packages, and Python >=2.5. We ran all code on Linux.
 
-To download Biostrings: in R, run:
+To download Biostrings and Ballgown: in R, run:
 ```S
 source("http://bioconductor.org/biocLite.R")
 biocLite("Biostrings")
+biocLite("ballgown")
 ```
 
-To download Ballgown and Polyester: in R, run:
+To download Polyester: in R, run:
 ```S
 install.packages("devtools") #if needed
 library(devtools)
-install_github("ballgown", "alyssafrazee", ref="alpha")
 install_github("polyester", "alyssafrazee")
 ```
 
 Additionally, we relied heavily on the Sun Grid Engine (SGE) scheduling system when running this pipeline, since this is what our department uses to schedule batch cluster jobs. In particular, the shell scripts in this folder contain `qsub` commands, indicating that a script is being submitted to the cluster to be run, so these lines will have to be modified if you want to run this code without using SGE. 
 
-Finally, you will need [TopHat](http://tophat.cbcb.umd.edu/) (for the paper, we used version 2.0.9), [Cufflinks](http://cufflinks.cbcb.umd.edu/manual.html) (we used version 2.1.1), and the tablemaker binary (available in the [main Ballgown repository](https://github.com/alyssafrazee/ballgown)). These scripts assume "tophat" is in your path. See step (4) for more info on where we assume Cufflinks/Tablemaker are installed.
+Finally, you will need [TopHat](http://tophat.cbcb.umd.edu/) (for the paper, we used version 2.0.11), [Cufflinks](http://cufflinks.cbcb.umd.edu/manual.html) (we used version 2.2.1), and [Tablemaker](https://github.com/alyssafrazee/tablemaker). These scripts assume that the executables "tophat", "cufflinks", "cuffmerge", "cuffdiff", and "tablemaker" are in your path. 
 
 #### (1) get transcripts to simulate from
 We simulated reads from human chromosome 22, Ensembl version 74. All transcripts can be downloaded from `ftp://ftp.ensembl.org/pub/release-74/fasta/homo_sapiens/cdna/Homo_sapiens.GRCh37.74.cdna.all.fa.gz`. Download this file, un-tar, and un-zip it, then run `get_chr22.R` to subset to chromsome 22. This produces `ensembl_chr22.fa`.
@@ -68,20 +66,20 @@ You will need to edit some environment variables at the beginning of these scrip
 
 
 These scripts:  
-* simulate reads with the R scripts prefixed with `simReads` (i.e, `simReads_FPKM_direct_geuvadis.R` for scenario #1, and `simReads_NB_p0.R` for scenario #2.) Read simulation is done with the `simulate_experiment_countmat` function in the [Polyester R package](https://github.com/alyssafrazee/ballgown/tree/master/polyester).
+* simulate RNA-seq reads with the code in `FPKM` (scenario #1) and `NB` (scenario #2) folders. The shell script should be directly run (it calls the R script)
 * run TopHat on each simulated sample
 * Assemble transcripts with Cufflinks for each sample
 * merge sample-specific assemblies with Cuffmerge
-* run the Tablemaker binary (preprocessing step for Ballgown) for each sample
+* run Tablemaker (preprocessing step for Ballgown) on each sample
 * run Cuffdiff on the experiment
 
 The python scripts in this repo are also called by the shell scripts. All the python scripts do is look for output: they check to make sure all the TopHat jobs are done before moving on to Cufflinks, check to make sure all the Cufflinks jobs are done before doing Cuffmerge, and check to make sure all the tablemaker jobs have finished before re-organizing output files and moving on to the analysis step.
 
 #### (5) analyze output
-All output will be organized in the folder specified in the `FOLDERNAME` variable at the beginning of the shell scripts. TopHat output will be in the `alignments` subfolder, Cufflinks in the `assemblies` folder, Cuffdiff in the `cuffdiff` folder, etc. Ballgown `.ctab` files will be in subfolders of the `ballgown` directory, so a ballgown object can be created in R as follows:
+All output will be organized in the folder specified in the `FOLDERNAME` variable at the beginning of the shell scripts (default is `./FPKM_out` and `./NB_out`). TopHat output will be in the `alignments` subfolder, Cufflinks in the `assemblies` folder, Cuffdiff in the `cuffdiff` folder, etc. Ballgown `.ctab` files will be in subfolders of the `ballgown` directory, so a ballgown object can be created in R as follows:
 
 ```S
-# assuming working directory is $FOLDERNAME:
+# assuming current working directory is FPKM or NB:
 library(ballgown)
 bgresults = ballgown(dataDir='ballgown', samplePattern='sample')
 ```
@@ -97,10 +95,3 @@ The simulated reads used for the analysis in the paper are available for downloa
 * [Negative binomial simulation (scenario 2)](https://www.dropbox.com/s/2e5gmasapnnzn29/nbp0.zip)
 
  
-
-
-
-
-
-
-
