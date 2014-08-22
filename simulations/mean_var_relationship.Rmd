@@ -1,0 +1,85 @@
+---
+title: "mean/variance relationship"
+author: "Alyssa Frazee"
+date: "August 21, 2014"
+output: html_document
+---
+
+We will need the GEUVADIS FPKM Ballgown object for this analysis. [Download here](http://files.figshare.com/1625419/fpkm.rda).
+
+### FPKM distribution
+For the simulations, we will model the FPKM for a given transcript as a mixture distribution across samples, with point mass at zero with probability $p$, and log-normally distributed with some mean and variance (with probability $1-p$). We made this decision based on several plots of the FPKM distribution across samples in the GEUVADIS dataset for several highly-expressed transcripts (mean FPKM > 10). Most of the distributions we plotted showed that the log of the nonzero FPKM values was approximately normally distributed, and we generally observed some point mass at 0. We show 15 of these plots (randomly selected) here:
+
+```{r, warning=FALSE, message=FALSE}
+library(ballgown)
+load('fpkm.rda')
+texpr_hi = texpr(fpkm)[rowMeans(texpr(fpkm)) > 10,]
+nrow(texpr_hi)
+set.seed(71813)
+selected_inds = sample(1:nrow(texpr_hi), 15)
+for(tx in selected_inds){
+  hist(log(texpr_hi[tx,]+0.5), col='gray', breaks=30, 
+       main=paste('expression distribution', tx))
+}
+```
+
+
+### mean/variance relationship
+Now that we have determined an appropriate FPKM distribution, we need to define a mean/variance relationship for the nonzero FPKM values. We observe that the log of a transcript's mean nonzero expression value is approximately linearly related to the log of variance of those nonzero expression values, especially for highly-expressed transcripts:
+
+```{r, warning=FALSE}
+texpr_hi_nz = texpr_hi
+texpr_hi_nz[texpr_hi_nz == 0] = NA
+means = rowMeans(texpr_hi_nz, na.rm=TRUE)
+library(genefilter)
+vars = rowVars(texpr_hi_nz, na.rm=TRUE)
+plot(log(means), log(vars), xlab='Log mean', ylab='Log variance', main = 'mean/variance relationship', pch=19, col='#00000050')
+abline(lm(log(vars)~log(means)), col='dodgerblue', lwd=3)
+legend('topleft', lwd=3, lty=1, col='dodgerblue', 'linear model fit')
+```
+
+We'll extract the mean/variance model's fitted coefficients and use them in our simulations:
+
+```{r}
+mvmod = lm(log(vars) ~ log(means))
+summary(mvmod)
+```
+
+So we will model the mean/variance relationship as $\text{log variance} = `r as.numeric(mvmod$coefficients[2])`\text{log mean} + `r as.numeric(mvmod$coefficients[1])`$.
+
+Finally, here is the distribution of $p$ (the probability that the FPKM for a transcript is 0 for a given sample):
+
+```{r}
+p0s = rowMeans(is.na(texpr_hi_nz))
+hist(p0s, col='gray', breaks=30, main='estimates of p', xlab='p')
+hist(p0s[p0s != 0], col='gray', breaks=30, main='estimates of nonzero p', xlab='p')
+```
+
+So, many of the transcripts have $p=0$. Next we investigate whether $p$ and transcript mean are correlated:
+```{r}
+plot(p0s, means, xlab='p', ylab='mean FPKM', main='relationship between p and transcript mean')
+```
+
+There doesn't seem to be any relationship, but it's difficult to see for low values of $p$. A log-transform might help (for either or both variables):
+
+```{r}
+plot(means, log(p0s+0.01), main='relationship between log(p) and transcript mean', xlab='mean FPKM', ylab='log p')
+plot(log(means), p0s, main='relationship between p and log(transcript mean)', xlab='log(mean FPKM)', ylab='p')
+plot(log(means), log(p0s+0.01), main = 'log log relationship between p and transcript mean', ylab='log p', xlab='log(mean FPKM)')
+cor(log(p0s+0.01), log(means))
+```
+
+So there is a moderate positive correlation between mean FPKM and $p$. Here is a loess smoother to define the relationship between transcript mean and $p$:
+
+```{r}
+plot(log(means), log(p0s+0.01), main = 'log log relationship between p and transcript mean', ylab='log p', xlab='log(mean FPKM)', pch=19, col='#00000050')
+fit = loess(log(p0s + 0.01) ~ log(means))
+lines(log(means)[order(log(means))], predict(fit)[order(log(means))], col='dodgerblue', lwd=3)
+```
+
+If we use this to predict $p$ for a given mean FPKM, we'll basically have very low $p$s for low (log mean more like 2-4 rather than 10) FPKM values, even though the real data has several transcripts with log mean FPKM values in that range with higher values of $p$. For that reason, even though there is some moderate correlation, we will choose $p$ for each transcript independently of that transcript's mean FPKM in our simulations.
+
+```{r, results='markup'}
+sessionInfo()
+```
+
