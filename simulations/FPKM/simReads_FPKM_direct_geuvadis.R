@@ -17,6 +17,8 @@ library(polyester)
 library(ballgown)
 library(Biostrings)
 
+# set seed
+set.seed(81313)
 
 # load fasta file of transcripts
 transcripts = readDNAStringSet(fasta)
@@ -36,14 +38,14 @@ if(UCSC){
 ntranscripts = length(transcripts)
 nde = round(percentde*ntranscripts)
 
-load(bgpath) #geuvadisbg, from shell script
+load(bgpath) #fpkm, from shell script
 
-texpr_nozero = texpr(geuvadisbg)[rowMeans(texpr(geuvadisbg)) > 100, ]
+texpr_nozero = texpr(fpkm)[rowMeans(texpr(fpkm)) > 10, ]
 texpr_nozero[texpr_nozero==0] <- NA
 means = rowMeans(texpr_nozero, na.rm=TRUE)
-logvars = 2*log(means)+0.5  #from a logmean/logvar linear model fit
+logvars = 2.23*log(means) - 3.08  #from a logmean/logvar linear model fit
 vars = exp(logvars)
-p0s = rowSums(is.na(texpr_nozero))/ncol(texpr_nozero)
+p0s = rowMeans(is.na(texpr_nozero))
 
 fc = matrix(1, nrow=ntranscripts, ncol=nsamples)
 de_inds = sample(1:ntranscripts, size=nde, replace=FALSE)
@@ -80,7 +82,5 @@ save(nreads, file=paste0(foldername, '/nreads.rda'))
 # generate reads!
 outdir = paste0(foldername, '/data/')
 system(paste('mkdir -p', outdir))
-simulate_experiment_countmat(fasta=fasta, readmat=nreads, outdir=outdir)
-
-
+simulate_experiment_countmat(fasta=fasta, readmat=nreads, outdir=outdir, seed=1349)
 

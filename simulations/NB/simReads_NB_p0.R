@@ -20,11 +20,12 @@ ratio = as.numeric(provided[13])
 
 
 # load libs
-library(devtools)
 library(polyester)
 library(ballgown)
 library(Biostrings)
 
+# set seed
+set.seed(1009)
 
 # load fasta file of transcripts
 transcripts = readDNAStringSet(fasta)
@@ -64,4 +65,4 @@ save(nreads, file=paste0(foldername, '/nreads.rda'))
 # generate reads!
 outdir = paste0(foldername, '/data/')
 system(paste('mkdir -p', outdir))
-simulate_experiment_countmat(fasta=fasta, readmat=nreads, outdir=outdir)
+simulate_experiment_countmat(fasta=fasta, readmat=nreads, outdir=outdir, seed=130194)
