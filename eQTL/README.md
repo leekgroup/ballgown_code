@@ -15,7 +15,7 @@ Running `eqtl-analysis-geuvadis.R` requires:
 dropbox.com/s/g8d9tyc6hky5nwu/plink.mds)
   2.  Either running `fit_eqtl_model.R` or downloading what would be output from it:
     - MatrixEQTL results: [eQTL_GEUVADIS_imputed_list_cis_1e6.rda](https://www.dropbox.com/s/c3r3bgsuhs2s07g/eQTL_GEUVADIS_imputed_list_cis_1e6.rda)
-    - Annotated MatrixEQTL results: [eQTL_GEUVADIS_imputed_list_cis_1e6_annotated.rda](https://www.dropbox.com/s/z3eb39zbq44ydov/eQTL_GEUVADIS_imputed_list_cis_1e6_annotated.rda)
+    - Annotated MatrixEQTL results: [eQTL_GEUVADIS_imputed_list_cis_1e6_annotated.rda](http://files.figshare.com/1645064/eQTL_GEUVADIS_imputed_list_cis_1e6_annotated.rda)
     - Annotated MatrixEQTL results, significant eQTLs only: [sig_eQTL_GEUVADIS_imputed_list_cis_1e6_annotated.rda](https://www.dropbox.com/s/zvq44jo3srhbdyq/sig_eQTL_GEUVADIS_imputed_list_cis_1e6_annotated.rda)
   3.  Finally running `eqtl-analysis-geuvadis.R`. 
 

@@ -14,7 +14,6 @@ setwd('/Users/alyssafrazee/Google Drive/hopkins/research/_ballgown/ballgown_code
 ```{r, message=FALSE, warning=FALSE}
 library(devtools)
 install_github('usefulstuff', 'alyssafrazee')
-
 library(ballgown)
 library(reshape2)
 library(limma)
