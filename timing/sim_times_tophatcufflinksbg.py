@@ -18,10 +18,20 @@ context_io_obj = c.ContextIO(
     consumer_secret = CONSUMER_SECRET
     )
 
+### access your email account
+accounts = context_io_obj.get_accounts(email='me@email.com') 
+if accounts:
+    account = accounts[0]
+else:
+    raise ValueError('failed to access '+options.email)
+
 ### grab the emails from the jobs in question
-job_reports = account.get_messages(email="myemail+stiming@gmail.com", limit=200)
+tophat_reports = account.get_messages(email="me+tophatNB@email.com", limit=200)
+cufflinks_reports = account.get_messages(email="me+cufflinksNB@email.com", limit=200)
+tablemaker_reports = account.get_messages(email="me+tablemakerNB@email.com", limit=200)
+cuffquant_reports = account.get_messages(email="me+cuffquantNB@email.com", limit=200)
 data = []
-for job in job_reports:
+for job in tophat_reports+cufflinks_reports+tablemaker_reports+cuffquant_reports:
     ## avoid the API limit (120 requests max in 30 seconds)
     ## solution: make each request take at least 0.25 seconds
     time.sleep(0.25)
@@ -36,28 +46,23 @@ for job in job_reports:
     jobinfo['Queue'] = jobinfo['Queue'].split('@')[0]
     data.append(jobinfo)
 
-### tophat times:
-tophat_times = [d['Wallclock Time'] for d in data if 'tophat' in d['name']]
-tophat_times = map(lambda(x): x.split(':'), tophat_times)
+### functions to grab average time for specific jobs:
 def turn_to_hrs(strtime):
     return int(strtime[0])+float(strtime[1])/60+float(strtime[2])/3600
-tophat_times = map(turn_to_hrs, tophat_times)
-sum(tophat_times)/len(tophat_times) ## 2.04 hours
 
-### cufflinks times
-cufflinks_times = [d['Wallclock Time'] for d in data if 'cufflinks' in d['name']]
-cufflinks_times = map(lambda(x): x.split(':'), cufflinks_times)
-cufflinks_times = map(turn_to_hrs, cufflinks_times)
-sum(cufflinks_times)/len(cufflinks_times)*60 ## 4.85 minutes
+def get_time(jobtype, dataset):
+    times = [d['Wallclock Time'] for d in dataset if jobtype in d['name']]
+    times = map(lambda(x): x.split(':'), times)
+    times = map(turn_to_hrs, times)
+    return float(sum(times))/len(times) 
 
-### tablemaker times
-tablemaker_times = [d['Wallclock Time'] for d in data if 'ballgown' in d['name']]
-tablemaker_times = map(lambda(x): x.split(':'), tablemaker_times)
-tablemaker_times = map(turn_to_hrs, tablemaker_times)
-sum(tablemaker_times)/len(tablemaker_times)*60 ## 3.21 minutes
+get_time('tophat', data) #0.94 hours = 56.4 minutes
+get_time('cufflinks', data)*60 #1.97 minutes
+get_time('ballgown', data)*60 #5.38 minutes
+get_time('cuffquant', data)*60 #3.09 minutes
 
 with open('simtimes.txt','w') as f:
-    f.write('sample\ttophat\tcufflinks\tballgown\n')
+    f.write('sample\ttophat\tcufflinks\tballgown\tcuffquant\n')
     for samp in [str(x).zfill(2) for x in range(1,21)]:
         ttimest = [d['Wallclock Time'] for d in data if 'tophat_'+samp in d['name']][0]
         ttimesp = ttimest.split(':')
@@ -68,6 +73,13 @@ with open('simtimes.txt','w') as f:
         btimest = [d['Wallclock Time'] for d in data if 'ballgown_'+samp in d['name']][0]
         btimesp = btimest.split(':')
         btime = turn_to_hrs(btimesp)
-        f.write(samp+'\t'+str(ttime)+'\t'+str(ctime)+'\t'+str(btime)+'\n')
+        cqtimest = [d['Wallclock Time'] for d in data if 'cuffquant_NB_'+samp in d['name']]
+        if cqtimest:
+            cqtimest = cqtimest[0]
+            cqtimesp = cqtimest.split(':')
+            cqtime = turn_to_hrs(cqtimesp)
+        else:
+            cqtime = 'NA' ## sge failed to send emails for 4 jobs, but still a decent estimate of times.
+        f.write(samp+'\t'+str(ttime)+'\t'+str(ctime)+'\t'+str(btime)+'\t'+str(cqtime)+'\n')
 
 
