@@ -8,6 +8,7 @@ output: html_document
 ## Spline models vs. no RIN term
 
 First download the Ballgown package and load the GEUVADIS FPKM ballgown object. (The file `fpkm.rda` can be downloaded from [this link](http://files.figshare.com/1625419/fpkm.rda))
+
 ```{r, message=FALSE}
 library(ballgown) #need version 0.99.3 or higher
 load('fpkm.rda')
@@ -87,16 +88,23 @@ plotfitted = function(results, rowInd, bgobj, lib_adj, legloc = 'topleft',
 }
 ```
 
-Here is Figure 3a:
+Here are the RIN panels for Figure 2:
 
 ```{r}
 plotfitted(results_sorted, 242, gbg, libadjust, pch=19, col="#00000050", legloc='bottomleft')
+plotfitted(results_sorted, 328, gbg, libadjust, pch=19, col="#00000050")
+
 ```
 
-and Figure 3b:
-
-```{r}
-plotfitted(results_sorted, 328, gbg, libadjust, pch=19, col="#00000050")
+```{r, eval=FALSE, echo=FALSE}
+# don't evaluate when running markdown doc, since figure is above
+# but I do want to save pdf and record that I did so.
+pdf('RIN_figure1.pdf')
+    plotfitted(results_sorted, 242, gbg, libadjust, pch=19, col="#00000050", legloc='bottomleft')
+dev.off()
+pdf('RIN_figure2.pdf')
+    plotfitted(results_sorted, 328, gbg, libadjust, pch=19, col="#00000050")
+dev.off()
 ```
 
 
@@ -139,7 +147,7 @@ Both show that the polynomial fit is significantly better than the linear fit.
 
 ## Distribution of RIN effects
 
-Next, we investigate the distribution of RIN effects: if a transcript's expression measurement is affected by RIN (RNA quality), the relationship is more likely to be positive than negative, i.e., it makes more sense that better RNA quality means higher transcript expression measurements. To investigate this, we'll make a histogram of empirical Bayes (shrunk) t-statistics for the estimated linear RIN coefficients for each transcript (this is Supplementary Figure 2):
+Next, we investigate the distribution of RIN effects: if a transcript's expression measurement is affected by RIN (RNA quality), the relationship is more likely to be positive than negative, i.e., it makes more sense that better RNA quality means higher transcript expression measurements. To investigate this, we'll make a histogram of empirical Bayes (shrunk) t-statistics for the estimated linear RIN coefficients for each transcript (this is what was Supplementary Figure 2 in the original manuscript):
 
 ```{r, message=FALSE}
 library(limma)
@@ -151,27 +159,40 @@ hist(ebmodel$t[,6], col='gray', main='t-statistics for linear RIN coefficients',
 abline(v=0, col='red', lwd=2)
 ```
 
+```{r, echo=FALSE, eval=FALSE}
+pdf('RINhist.pdf')
+    hist(ebmodel$t[,6], col='gray', main='t-statistics for linear RIN coefficients', xlab='t-statistics', breaks=50)
+    abline(v=0, col='red', lwd=2)
+dev.off()
+```
+
+
 As expected, the distribution of t-statistics is shifted toward positive statistics (rather than centered around 0), with a mean of `r mean(ebmodel$t[,6])`.
 
 ## Coverage vs. FPKM
 
-Finally, we'll repeat the RIN analysis using average coverage instead of FPKM as the expression measurement. We will need another Ballgown object for this, available [here](http://files.figshare.com/1625417/cov.rda). This code makes Figure 6d. Transcripts are downsampled to make the plot somewhat readable.
+Finally, we'll repeat the RIN analysis using average coverage instead of FPKM as the expression measurement. We will need another Ballgown object for this, available [here](http://files.figshare.com/1625417/cov.rda). This code makes what was Figure 6d in the original preprint. Transcripts are downsampled to make the plot somewhat readable.
 
 ```{r, warning=FALSE}
 load('cov.rda')
 cov_small = subset(cov, "UseThisDup==1", genomesubset=FALSE) 
-rrcov = stattest(cov_small, feature="transcript", meas="cov", 
+# test the same highly-expressed transcripts from before
+cov_filt = subset(cov_small, "t_id %in% rin_results_hiexpr$id")
+rrcov = stattest(cov_filt, feature="transcript", meas="cov", 
     timecourse=TRUE, covariate="RIN", adjustvars="population")
-# test same transcripts as were tested before:
-rrcov_hiexpr = subset(rrcov, id %in% rin_results_hiexpr$id)
-rrcov_hiexpr$qval = p.adjust(rrcov_hiexpr$pval, 'fdr')
-sum(as.character(rrcov_hiexpr$id) != as.character(rin_results_hiexpr$id)) # expect 0 (sanity check)
+sum(as.character(rrcov$id) != as.character(rin_results_hiexpr$id)) # expect 0 (sanity check)
 fpkmrank = rank(rin_results_hiexpr$pval)
-covrank = rank(rrcov_hiexpr$pval)
+covrank = rank(rrcov$pval)
 set.seed(12390)
 inds = sample(1:length(fpkmrank), 2000) # downsampling, for readability
 plot(fpkmrank[inds], covrank[inds], xlab="FPKM rank", ylab="Average coverage rank", pch=19, cex=0.7)
 cor(fpkmrank[inds], covrank[inds])
+```
+
+```{r, eval=FALSE, echo=FALSE}
+pdf('RIN_fpkm_cov_cor.pdf')
+    plot(fpkmrank[inds], covrank[inds], xlab="FPKM rank", ylab="Average coverage rank", pch=19, cex=0.7)
+dev.off()
 ```
 
 ## Version/Platform information
