@@ -1,1 +1,4 @@
 simulations/sim_results_local.R
+insilicodb/*.pdf
+insilicodb/insilicodb_cache
+insilicodb/insilicodb_files

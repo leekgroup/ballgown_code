@@ -8,12 +8,12 @@ output: html_document
 ## analysis of publicly-available datasets with Cuffdiff, Ballgown, and EBSeq
 
 ```{r, eval=FALSE, echo=FALSE}
-setwd('/Users/alyssafrazee/Google Drive/hopkins/research/_ballgown/ballgown_code/InSilicoDB')
+setwd('/Users/alyssafrazee/GitHub/ballgown_code/InSilicoDB')
 ```
 
 ```{r, message=FALSE, warning=FALSE}
 library(devtools)
-install_github('usefulstuff', 'alyssafrazee')
+install_github('alyssafrazee/usefulstuff')
 library(ballgown)
 library(reshape2)
 library(limma)
@@ -115,6 +115,16 @@ bhist(hitranscripts$p_value[hitranscripts$status == "OK"], fill='orange', alpha=
     add=TRUE)
 ```
 
+```{r, echo=FALSE, eval=FALSE}
+pdf('tumorp.pdf')
+  bhist(bgresults$pval[bgresults$id %in% hiID], fill='dodgerblue', alpha=0.6,
+    xlab="p-values", ylab='Frequency', main="Tumor vs. control, Cuffdiff 2.2.1")
+  bhist(hitranscripts$p_value[hitranscripts$status == "OK"], fill='orange', alpha=0.6, 
+    add=TRUE)
+  legend('topright', col=c('dodgerblue', 'orange'), pch=c(15,15), c('Ballgown', 'Cuffdiff'))
+dev.off()
+```
+
 Again, Cuffdiff is looking much more reasonable than version 2.0.2. Ballgown is still calling more transcripts differentially expressed, though.
 
 ### dataset 2: cell types
@@ -199,6 +209,17 @@ bhist(bgresults$pval[bgresults$id %in% hiID], fill='dodgerblue',
 bhist(hitranscripts$p_value[hitranscripts$status == "OK"], 
     fill='orange', alpha=0.6, add=TRUE)
 legend('topright', col=c('dodgerblue', 'orange'), pch=c(15,15), c('Ballgown', 'Cuffdiff'))
+```
+
+```{r, eval=FALSE, echo=FALSE}
+pdf('celltype_p.pdf')
+  bhist(bgresults$pval[bgresults$id %in% hiID], fill='dodgerblue', 
+    alpha=0.6, xlab="p-values", ylab='Frequency', 
+    main="Cell type comparison, Cuffdiff 2.2.1")
+  bhist(hitranscripts$p_value[hitranscripts$status == "OK"], 
+    fill='orange', alpha=0.6, add=TRUE)
+  legend('topright', col=c('dodgerblue', 'orange'), pch=c(15,15), c('Ballgown', 'Cuffdiff'))
+dev.off()
 ```
 
 Here are the numbers presented in the "statistical significance comparison" section of the manuscript. We re-compute q-values using only the p-values from the highly-expressed (mean FPKM>1) transcripts:
