@@ -1,0 +1,125 @@
+ids	Cell Type	Developmental Stage	Anatomical Site	
+GSM896815	human embryonic stem cell	peri-implantation stem cells	human embryonic stem cell line	
+GSM896816	human embryonic stem cell	peri-implantation stem cells	human embryonic stem cell line	
+GSM922224	human embryonic stem cell	peri-implantation stem cells	human embryonic stem cell line	
+GSM922225	human embryonic stem cell	peri-implantation stem cells	human embryonic stem cell line	
+GSM922226	human embryonic stem cell	peri-implantation stem cells	human embryonic stem cell line	
+GSM922227	human embryonic stem cell	peri-implantation stem cells	human embryonic stem cell line	
+GSM922228	human embryonic stem cell	peri-implantation stem cells	human embryonic stem cell line	
+GSM922230	human embryonic stem cell	peri-implantation stem cells	human embryonic stem cell line	
+GSM922250	human embryonic stem cell	peri-implantation stem cells	human embryonic stem cell line	
+GSM922251	human embryonic stem cell	peri-implantation stem cells	human embryonic stem cell line	
+GSM922252	human embryonic stem cell	peri-implantation stem cells	human embryonic stem cell line	
+GSM922253	human embryonic stem cell	peri-implantation stem cells	human embryonic stem cell line	
+GSM922254	human embryonic stem cell	peri-implantation stem cells	human embryonic stem cell line	
+GSM922255	human embryonic stem cell	peri-implantation stem cells	human embryonic stem cell line	
+GSM922256	human embryonic stem cell	peri-implantation stem cells	human embryonic stem cell line	
+GSM922257	human embryonic stem cell	peri-implantation stem cells	human embryonic stem cell line	
+GSM922258	human embryonic stem cell	peri-implantation stem cells	human embryonic stem cell line	
+GSM922259	human embryonic stem cell	peri-implantation stem cells	human embryonic stem cell line	
+GSM922260	human embryonic stem cell	peri-implantation stem cells	human embryonic stem cell line	
+GSM922261	human embryonic stem cell	peri-implantation stem cells	human embryonic stem cell line	
+GSM922262	human embryonic stem cell	peri-implantation stem cells	human embryonic stem cell line	
+GSM922263	human embryonic stem cell	peri-implantation stem cells	human embryonic stem cell line	
+GSM922264	human embryonic stem cell	peri-implantation stem cells	human embryonic stem cell line	
+GSM922265	human embryonic stem cell	peri-implantation stem cells	human embryonic stem cell line	
+GSM922266	human embryonic stem cell	peri-implantation stem cells	human embryonic stem cell line	
+GSM922267	human embryonic stem cell	peri-implantation stem cells	human embryonic stem cell line	
+GSM922268	human embryonic stem cell	peri-implantation stem cells	human embryonic stem cell line	
+GSM922269	human embryonic stem cell	peri-implantation stem cells	human embryonic stem cell line	
+GSM922270	human embryonic stem cell	peri-implantation stem cells	human embryonic stem cell line	
+GSM922271	human embryonic stem cell	peri-implantation stem cells	human embryonic stem cell line	
+GSM922272	human embryonic stem cell	peri-implantation stem cells	human embryonic stem cell line	
+GSM922273	human embryonic stem cell	peri-implantation stem cells	human embryonic stem cell line	
+GSM922274	human embryonic stem cell	peri-implantation stem cells	human embryonic stem cell line	
+GSM922275	human embryonic stem cell	peri-implantation stem cells	human embryonic stem cell line	
+GSM896803	human preimplantation blastomere (Oocyte)	early blastomere	human preimplantation embryos	
+GSM896804	human preimplantation blastomere (Oocyte)	early blastomere	human preimplantation embryos	
+GSM896805	human preimplantation blastomere (Oocyte)	early blastomere	human preimplantation embryos	
+GSM896806	human preimplantation blastomere (zygote)	early blastomere	human preimplantation embryos	
+GSM896807	human preimplantation blastomere (zygote)	early blastomere	human preimplantation embryos	
+GSM896808	human preimplantation blastomere (zygote)	early blastomere	human preimplantation embryos	
+GSM896809	human preimplantation blastomere (2-cell)	early blastomere	human preimplantation embryos	
+GSM896810	human preimplantation blastomere (2-cell)	early blastomere	human preimplantation embryos	
+GSM896811	human preimplantation blastomere (2-cell)	early blastomere	human preimplantation embryos	
+GSM896812	human preimplantation blastomere (2-cell)	early blastomere	human preimplantation embryos	
+GSM896813	human preimplantation blastomere (2-cell)	early blastomere	human preimplantation embryos	
+GSM896814	human preimplantation blastomere (2-cell)	early blastomere	human preimplantation embryos	
+GSM922146	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922147	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922148	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922149	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922150	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922151	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922152	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922153	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922154	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922155	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922156	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922157	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922158	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922159	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922160	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922161	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922162	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922163	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922164	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922165	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922166	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922167	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922168	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922169	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922170	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922171	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922172	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922173	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922174	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922175	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922176	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922177	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922178	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922179	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922180	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922181	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922182	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922183	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922184	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922185	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922186	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922187	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922188	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922189	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922190	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922191	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922192	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922193	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922194	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922195	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922196	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922197	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922198	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922199	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922200	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922201	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922202	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922203	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922204	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922205	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922206	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922207	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922208	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922209	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922210	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922211	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922212	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922213	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922214	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922215	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922216	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922217	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922218	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922219	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922220	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922221	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922222	human preimplantation blastomere	early blastomere	human preimplantation embryos	
+GSM922223	human preimplantation blastomere	early blastomere	human preimplantation embryos	
