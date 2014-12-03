@@ -1,0 +1,183 @@
+---
+title: "Negative Control Experiment"
+author: "Alyssa Frazee"
+date: "August 13, 2014"
+output: html_document
+---
+
+We will need the GEUVADIS FPKM Ballgown object for this analysis. [Download here](http://files.figshare.com/1625419/fpkm.rda).
+
+```{r load, message=FALSE, warning=FALSE}
+library(ballgown)
+load('fpkm.rda')
+head(pData(fpkm))
+```
+
+For the negative control, we'll compare two random groups of individuals from the same population.
+
+```{r}
+table(pData(fpkm)$population[pData(fpkm)$UseThisDup==1])
+```
+
+The FIN and GBR populations have the most replicates, so let's use FIN. (Note that we're only considering reps marked by the original GEUVADIS researchers as "use this duplicate.")
+
+```{r, warning=FALSE}
+control = subset(fpkm, 'population == "FIN" & UseThisDup == 1', genomesubset=FALSE)
+set.seed(1247)
+pData(control)$randgroup = sample(c(0,1), size=nrow(pData(control)), replace=TRUE)
+table(pData(control)$randgroup)
+```
+
+```{r, echo=FALSE}
+# write out file for use with Cuffdiff
+write.table(pData(control)[,c('dirname', 'randgroup')], file='random_groups.txt', col.names=FALSE, row.names=FALSE, quote=FALSE)
+```
+
+So we will do a 48 vs. 47 comparison.
+
+### Ballgown results
+
+```{r}
+system.time(negative_results_all <- stattest(control, feature='transcript', meas='FPKM', covariate='randgroup'))
+```
+
+We will only keep/analyze results from transcripts whose mean FPKM value across the FIN samples is greater than 0.01 (and re-adjust p-values accordingly):
+
+```{r}
+negative_results = negative_results_all[rowMeans(texpr(control)) >= 0.01,]
+nrow(negative_results)
+negative_results$qval = p.adjust(negative_results$pval, 'fdr')
+min(negative_results$qval, na.rm=TRUE)
+hist(negative_results$pval, breaks=30, col='gray', xlab='p-values', main='Ballgown negative control p-values')
+write.csv(negative_results$pval, file='1a.csv')
+```
+
+Make the figure (*Figure 1a*):
+
+```{r, echo=FALSE, eval=FALSE}
+pdf('figure1a.pdf')
+    hist(negative_results$pval, breaks=30, col='gray', xlab='p-values', main='Ballgown negative control p-values')
+dev.off()
+```
+
+Ballgown's minimum q-value from this experiment is approximately `r min(negative_results$qval, na.rm=TRUE)`, and the p-value histogram is approximately uniformly distributed. These two properties are to be expected, since there was no signal. This provides evidence that a linear modeling framework for differential expression testing at the transcript level is not too liberal.
+
+### exon-level analysis / comparison to EdgeR
+
+Here we run an exon-level differential expression analysis with Ballgown and show that it also exhibits the properties expected in an analysis of an experiment with no signal: very large minimum q-value and uniform p-values. EdgeR's results are similar.
+
+For this analysis we will need the GEUVADIS "rcount" (per-exon read count) Ballgown object, [available here](http://files.figshare.com/1625424/rcount.rda).
+
+```{r, warning=FALSE, cache=TRUE}
+load('rcount.rda')
+excontrol = subset(rcount, 'population == "FIN" & UseThisDup == 1', genomesubset=FALSE)
+stopifnot(all(pData(excontrol)$dirname == pData(control)$dirname))
+pData(excontrol)$randgroup = pData(control)$randgroup
+exon_results_all = stattest(excontrol, feature='exon', meas='rcount', covariate='randgroup')
+```
+
+We will analyze results from exons with a mean read count of 3 or higher:
+
+```{r}
+exon_results = exon_results_all[rowSums(eexpr(excontrol)>1) > 20,] #at least 20 samples should have at least 3 reads in the exon
+exon_results$qval = p.adjust(exon_results$pval, 'fdr')
+min(exon_results$qval)
+hist(exon_results$pval, breaks=30, col='gray', xlab='p-values', main='Negative control p-values (exons)')
+```
+
+A similar analysis performed in EdgeR gives the following results:
+
+```{r, cache=TRUE, warning=FALSE}
+library(edgeR)
+counts = eexpr(excontrol)
+grp = as.factor(pData(excontrol)$randgroup)
+system.time({
+  d = DGEList(counts=counts, group=grp)
+  d = calcNormFactors(d)
+  cps = cpm(d)
+  d = d[rowSums(cps>=1)>20,] #filter: at least 20 samples should have at least 1cpm
+  nrow(d) #number of exons left
+
+  mm = model.matrix(~grp)
+  d = estimateGLMCommonDisp(d, mm)
+  d = estimateGLMTrendedDisp(d, mm)
+  d = estimateGLMTagwiseDisp(d, mm)
+  fit = glmFit(d, mm)
+  lrt = glmLRT(fit, coef=2) #interesting coefficient is group, not intercept
+})
+
+res = topTags(lrt, nrow(d)) #get all results
+min(res$table$FDR)
+sum(res$table$FDR < 0.05)
+hist(res$table$PValue, breaks=30, col='gray', xlab='p-values', main='EdgeR negative control p-values')
+```
+
+```{r, eval=FALSE, echo=FALSE}
+pdf('edger_hist.pdf')
+    hist(res$table$PValue, breaks=30, col='gray', xlab='p-values', main='EdgeR negative control p-values')
+dev.off()
+```
+
+These analyses demonstrate that a well-established, count-based analysis here may be just slightly more _liberal_ than Ballgown's linear modeling analysis, which should mitigate concerns about Ballgown's FDR.
+
+### comparison to Cuffdiff
+We ran Cuffdiff 2.2.1 on this same 48 vs. 47 comparison (see `cuffdiff.sh`). This code creates the isoform-level p-value histogram:
+
+```{r}
+cuff = read.table('cuffdiff/isoform_exp.diff', header=TRUE, sep='\t')
+table(cuff$status)
+hist(cuff$p_value[cuff$status=="OK"], xlab='p-values', main='Cuffdiff negative control p-values', breaks=30, col='gray')
+```
+
+```{r, echo=FALSE, eval=FALSE}
+pdf('cuff_hist.pdf')
+    hist(cuff$p_value[cuff$status=="OK"], xlab='p-values', main='Cuffdiff negative control p-values', breaks=30, col='gray')
+dev.off()
+```
+
+This p-value histogram is not uniformly distributed, which means significance estimates and multiple testing correction are likely still problematic, even with the newest version of Cuffdiff as of August 2014. Additionally, this 4-core Cuffdiff job took 69 hours and 147G of memory. This could be sped up a bit with the new Cuffquant workflow, though our simulation timing results suggest that Tablemaker is slightly faster than Cuffquant, and that the Cuffdiff portion of the Cuffquant/Cuffdiff workflow is orders of magnitude slower than Ballgown's default statistical methods (or other DE methods like EdgeR or limma). For comparison, Ballgown's statistical models took less than 1 minute (on my 2011 MacBook with 8G memory) on this dataset.
+
+### comparison to EBSeq
+
+```{r, cache=TRUE}
+library(EBSeq)
+library(reshape2)
+rdata = read.table('cuffdiff/isoforms.read_group_tracking', header=TRUE, sep='\t')
+Data = acast(rdata, formula=tracking_id~replicate+condition, value.var='raw_frags')
+Conditions = ballgown:::ss(colnames(Data), pattern='_', slot=2)
+IsoformNames = rownames(Data)
+iso_gene_relationship = read.table('cuffdiff/isoform_exp.diff', 
+    colClasses=c('character', 'character', rep('NULL', 12)), header=TRUE)
+sum(IsoformNames != iso_gene_relationship$test_id) # expect 0
+IsosGeneNames = iso_gene_relationship$gene_id
+IsoSizes = MedianNorm(Data)
+NgList = GetNg(IsoformNames, IsosGeneNames)
+IsoNgTrun = NgList$IsoformNgTrun
+
+system.time(IsoEBOut <- EBTest(Data=Data, NgVector=IsoNgTrun, 
+    Conditions=as.factor(Conditions), sizeFactors=IsoSizes, maxround=20))
+
+# check convergence
+IsoEBOut$Alpha
+IsoEBOut$Beta
+IsoEBOut$P
+```
+
+It seems that EBSeq is a bit liberal here, calling `r sum(IsoEBOut$PPDE > 0.95)` transripts differentially expressed (defined as having a posterior probability of being differentially expressed of more than 0.95). EBSeq also performs slowly on this dataset, taking more than two hours to get the statistical results. These results could potentially be improved by changing the prior or accounting for uncertainty about which transcripts belong to which genes, but the point here is that Ballgown's linear models perform reasonably in this scenario and don't require counting (like EBSeq) or several hours of computing time (like EBSeq and Cuffdiff).
+
+These analyses show that Ballgown's built-in linear models perform adequately in a scenario where no differential expression is present, and thus they do not have any obvious false discovery rate control issues.
+
+### creating manuscript figures
+```{r}
+devtools::install_github('usefulstuff', 'alyssafrazee')
+library(usefulstuff)
+pdf('figure1a.pdf')
+  hist(negative_results$pval, col='gray', xlab='p-values', main='Negative Control')
+dev.off()
+```
+
+```{r, results='markup'}
+sessionInfo()
+```
+
+
