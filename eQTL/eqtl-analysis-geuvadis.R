@@ -192,3 +192,22 @@ pdf('figure4b.pdf')
 dev.off()
 
 
+## save CSVs for reproducibility
+# transcript locations for Figure 1e
+library(GenomicRanges)
+tids = texpr(fpkm,'all')$t_id[texpr(fpkm,'all')$gene_id == 'XLOC_000651']
+isoforms = structure(fpkm)$trans[tids]
+start = unlist(start(isoforms))
+end = unlist(end(isoforms))
+exonid = c(1,1,2,1,2)
+transcriptid = c('bottom', 'middle', 'middle', 'top', 'top')
+color = ifelse(transcriptid == 'middle', 'green', 'pink')
+tdat = data.frame(start, end, exonid, transcriptid, color)
+write.csv(tdat, file='1e.csv', quote=FALSE, row.names=FALSE)
+
+# boxplot data for Figure 1f
+boxplotdat = data.frame(expression=tmpGene, SNP=tmpSnp)
+write.csv(boxplotdat, file='1f.csv', row.names=FALSE, quote=FALSE)
+
+
+
