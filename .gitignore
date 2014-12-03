@@ -11,3 +11,8 @@ simulations/*.pdf
 *.jpg
 *.ppt*
 *.xls*
+positive_control/.Rhistory
+positive_control/cache
+positive_control/*.rda
+positive_control/Y_isoforms.read_group_tracking.gz
+positive_control/positive_control.md
