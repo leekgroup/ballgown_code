@@ -1,0 +1,7 @@
+cuffdiff/
+*.rda
+negative_control_cache/
+negative_control_files/
+*.pdf
+*.rda
+.Rhistory
