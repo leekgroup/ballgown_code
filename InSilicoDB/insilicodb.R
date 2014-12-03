@@ -41,7 +41,7 @@ statres = stattest(gowntable=rdata, pData = data.frame(group=grp),
 hiexpr = which(rowMeans(rdata) > 1)
 cuffp_hiexp = dtable$p_value[match(rownames(rdata), dtable$isoform_id)][hiexpr]
 
-## supplementary figure 7d
+## supplementary figure 5d
 pdf("celltype_oldcd.pdf")
     bhist(statres$pval[hiexpr], fill='dodgerblue', alpha=0.6,
         xlab="p-values", ylab='Frequency', 
@@ -105,7 +105,7 @@ length(which(cuffq_new < 0.05)) #1
 statq_new = p.adjust(statres$pval[hiexpr], 'fdr')
 length(which(statq_new < 0.05)) #774 
 
-#### supplementary figure 7b
+#### supplementary figure 5b
 cuffp_hiexp = ddata$p_value[match(rownames(bg_table), ddata$isoform_id)][hiexpr]
 pdf("cancer_oldcd.pdf")
     bhist(statres$pval[hiexpr], fill='dodgerblue', alpha=0.6,

@@ -106,7 +106,7 @@ sum(cuffq_new < 0.05) / length(cuffq_new)
 
 So, in the cancer dataset, Ballgown calls `r 100*sum(statq_new < 0.05) / length(statq_new)` percent of its tested (highly-expressed) transcripts differentially expressed, and Cuffdiff calls `r 100*sum(cuffq_new < 0.05) / length(cuffq_new)` percent of its tested, highly-expressed transcripts differentially expressed.
 
-Here is a version of Figure 2a in the original manuscript, updated to use the most recent version of Cuffdiff:
+Here is Supplementary Figure 5a, updated to use the most recent version of Cuffdiff:
 
 ```{r}
 bhist(bgresults$pval[bgresults$id %in% hiID], fill='dodgerblue', alpha=0.6,
@@ -200,7 +200,7 @@ sum(limma_p == bgres_hi$pval) # not *exactly* equal
 hist(abs(limma_p - bgres_hi$pval), main='Absolute differences between Limma and Ballgown p-values', col='gray')
 ```
 
-Here is an updated version of Figure 2b, with the new Cuffdiff version's results shown.
+Here is Supplementary Figure 5c:
 
 ```{r}
 bhist(bgresults$pval[bgresults$id %in% hiID], fill='dodgerblue', 

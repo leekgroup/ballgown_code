@@ -1,6 +1,6 @@
 ## code for InSilico DB analysis in ballgown manuscript
 
-This code executes the analysis of two datasets from [InSilico DB](https://insilicodb.com/) presented in the [ballgown manuscript](http://biorxiv.org/content/early/2014/09/05/003665). Specifically, this code produces Supplementary Figure 7, results in Supplementary Section 5.2, and results in the main manuscript paragraph beginning "Next, we carried out experiments designed to represent realistic differential expression scenarios..."
+This code executes the analysis of two datasets from [InSilico DB](https://insilicodb.com/) presented in the [ballgown manuscript](http://biorxiv.org/content/early/2014/09/05/003665). Specifically, this code produces Supplementary Figure 5, results in Supplementary Note 4, and results in the main manuscript paragraph beginning "Next, we carried out experiments designed to represent realistic differential expression scenarios..."
 
 ### dependencies
 
