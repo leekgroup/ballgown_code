@@ -9,4 +9,5 @@ simulations/*.pdf
 *.pdf
 *.png
 *.jpg
-*.pptx*
+*.ppt*
+*.xls*
