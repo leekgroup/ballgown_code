@@ -4,7 +4,6 @@ This code executes the negative control experiment presented in the [ballgown ma
 
 * Figure 1a
 * Supplementary Figure 3 (both panels)
-* Supplementary Figure 4
 
 You'll need Cuffdiff output to produce this code. If you want, you can download mine:
 * make a folder called `cuffdiff` in your working directory
