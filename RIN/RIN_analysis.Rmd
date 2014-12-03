@@ -49,8 +49,9 @@ libadjust = apply(texpr(gbg), 2, function(x){
 Then we define a plotting function: x-axis is RIN, y-axis is log expression, and the model fit is drawn separately for each of the five populations in the GEUVADIS dataset, assuming average library size:
 
 ```{r}
-plotfitted = function(results, rowInd, bgobj, lib_adj, legloc = 'topleft', 
-    returnModel = FALSE, ...){
+plotfitted = function(results, rowInd, bgobj, lib_adj, 
+    legloc = 'topleft', returnModel = FALSE,
+    writecsv = TRUE, fname=NULL, ...){
     require(splines)
     require(RSkittleBrewer)
     tid = as.numeric(as.character(results[rowInd,]$id))
@@ -82,28 +83,47 @@ plotfitted = function(results, rowInd, bgobj, lib_adj, legloc = 'topleft',
     lines(mdf$RIN, predict(model, newdataTSI), col=colpal[5], lwd=3)
     legend(legloc, col=colpal, lwd=3, c("YRI", "CEU", "FIN", "GBR", "TSI"))    
 
+    if(writecsv){
+        x = rep(mdf$RIN, 6)
+        y = c(mdf$expression, 
+            predict(model, newdataYRI),
+            predict(model, newdataCEU), 
+            predict(model, newdataFIN), 
+            predict(model, newdataGBR),
+            predict(model, newdataTSI))
+        type = c(rep('point', nrow(mdf)), 
+            rep('YRI_line', nrow(newdataYRI)),
+            rep('CEU_line', nrow(newdataCEU)),
+            rep('FIN_line', nrow(newdataFIN)),
+            rep('GBR_line', nrow(newdataGBR)),
+            rep('TSI_line', nrow(newdataTSI)))
+        df = data.frame(x=x, y=y, type=type)
+        write.csv(df, file=fname, row.names=FALSE, quote=FALSE)
+    }
+
     if(returnModel){
         return(model)
     }
 }
 ```
 
-Here are the RIN panels for Figure 2:
+Here are the RIN panels for Figure 2. Associated data is written to CSV.
 
 ```{r}
-plotfitted(results_sorted, 242, gbg, libadjust, pch=19, col="#00000050", legloc='bottomleft')
-plotfitted(results_sorted, 328, gbg, libadjust, pch=19, col="#00000050")
+plotfitted(results_sorted, 242, gbg, libadjust, pch=19, col="#00000050", legloc='bottomleft', writecsv=TRUE, fname='1c.csv')
+plotfitted(results_sorted, 328, gbg, libadjust, pch=19, col="#00000050", writecsv=TRUE, fname='1d.csv')
 
 ```
+
 
 ```{r, eval=FALSE, echo=FALSE}
 # don't evaluate when running markdown doc, since figure is above
 # but I do want to save pdf and record that I did so.
 pdf('RIN_figure1.pdf')
-    plotfitted(results_sorted, 242, gbg, libadjust, pch=19, col="#00000050", legloc='bottomleft')
+    plotfitted(results_sorted, 242, gbg, libadjust, pch=19, col="#00000050", legloc='bottomleft', writecsv = FALSE)
 dev.off()
 pdf('RIN_figure2.pdf')
-    plotfitted(results_sorted, 328, gbg, libadjust, pch=19, col="#00000050")
+    plotfitted(results_sorted, 328, gbg, libadjust, pch=19, col="#00000050", writecsv = FALSE)
 dev.off()
 ```
 
@@ -139,6 +159,7 @@ curvebetter_sort[which(curvebetter_sort$id == 25081),]$qval
 ```
 
 And the result from the transcript in Figure 3b is:
+
 ```{r}
 curvebetter_sort[which(curvebetter_sort$id == 37164),]$qval
 ```
