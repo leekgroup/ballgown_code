@@ -1,10 +1,10 @@
 ## code for RIN analysis in ballgown manuscript
 
-This code executes the analysis of how RNA quality ([RIN](http://en.wikipedia.org/wiki/RNA_integrity_number)) affects transcript expression presented in the [ballgown manuscript](http://biorxiv.org/content/early/2014/03/30/003665). Specifically, this code produces:
+This code executes the analysis of how RNA quality ([RIN](http://en.wikipedia.org/wiki/RNA_integrity_number)) affects transcript expression presented in the [ballgown manuscript](http://biorxiv.org/content/early/2014/09/05/003665). Specifically, this code produces:
 
-* Figure 3 (both panels)
-* Figure 6d
-* Supplementary Figure 2
+* Figure 1c-d
+* Supplementary Figure 3
+* Supplementary Figure 9c
 
 ### dependencies
 To use this code, you will need:
