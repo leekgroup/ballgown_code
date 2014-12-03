@@ -1,11 +1,11 @@
 ## code for eQTL analysis in ballgown manuscript
 
-This code performs the eQTL (Expression Quantitative Trait Loci) analysis in the [Ballgown manuscript](http://biorxiv.org/content/early/2014/03/30/003665).
+This code performs the eQTL (Expression Quantitative Trait Loci) analysis in the [Ballgown manuscript](http://biorxiv.org/content/early/2014/09/05/003665).
 
 Specifically, this code (`eqtl-analysis-geuvadis.R`) produces:  
-* Figure 4 (both panels)
-* Supplementary Figure 3 (both panels)
-* Numerical results in the "Expression quantitative trait locus analysis" section of the main manuscript (subsection of "Flexibility of statistical models") and in the "eQTL analysis" section of the supplement (subsection of "Data Analyses").
+* Figure 1e-f
+* Supplementary Figure 9 
+* Numerical results in the section of the manuscript beginning "To further illustrate the flexibility of using the post-processed Ballgown data..." (the eQTL section) and in Supplementary Note 8
 
 ### data and dependencies
 Running `eqtl-analysis-geuvadis.R` requires:
