@@ -6,3 +6,7 @@ insilicodb/cache
 insilicodb/figure
 insilicodb/insilicodb.md
 simulations/*.pdf
+*.pdf
+*.png
+*.jpg
+*.pptx*
