@@ -1,0 +1,271 @@
+<p>The previous experiment, the negative control, showed that Ballgown's default statistical tests are appropriately conservative when there is no signal present in the data. Here we do an experiment to show that these statistical tests are capable of making discoveries when differential expression really is present.</p>
+<p>For this experiment you will need <code>fpkm.rda</code> (<a href="http://files.figshare.com/1625419/fpkm.rda">download here</a>).</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ballgown)
+<span class="kw">load</span>(<span class="st">&#39;fpkm.rda&#39;</span>)
+<span class="kw">head</span>(<span class="kw">pData</span>(fpkm))</code></pre>
+<pre><code>##       dirname population IndividualID             SampleID UseThisDup RIN
+## 20    HG00096        GBR      HG00096 HG00096.1.M_111124_6          1 8.4
+## 211   HG00097        GBR      HG00097 HG00097.7.M_120219_2          1 9.2
+## 408   HG00099        GBR      HG00099 HG00099.5.M_120131_3          1 9.3
+## 526 HG00099_2        GBR      HG00099 HG00099.1.M_120209_6          0 9.3
+## 186   HG00100        GBR      HG00100 HG00100.2.M_111215_8          1 9.5
+## 287   HG00101        GBR      HG00101 HG00101.1.M_111124_4          1 9.3</code></pre>
+<p>Sex information was stored externally; add to object:</p>
+<pre class="sourceCode r"><code class="sourceCode r">pheno_table =<span class="st"> </span><span class="kw">read.table</span>(<span class="st">&#39;../GEUVADIS_preprocessing/pop_data_withuniqueid.txt&#39;</span>, <span class="dt">sep=</span><span class="st">&#39;</span><span class="ch">\t</span><span class="st">&#39;</span>, <span class="dt">header=</span><span class="ot">TRUE</span>)
+pd =<span class="st"> </span><span class="kw">pData</span>(fpkm)
+pd$sex =<span class="st"> </span>pheno_table$sex[<span class="kw">match</span>(pd$IndividualID, pheno_table$hapmap_id)]
+<span class="kw">pData</span>(fpkm) =<span class="st"> </span>pd</code></pre>
+<p>For the positive control, we'll analyze differential expression between males and females on the Y chromosome, using individuals from the FIN population (same as negative control experiment).</p>
+<pre class="sourceCode r"><code class="sourceCode r">fin =<span class="st"> </span><span class="kw">subset</span>(fpkm, <span class="st">&#39;population == &quot;FIN&quot; &amp; UseThisDup == 1&#39;</span>, <span class="dt">genomesubset=</span><span class="ot">FALSE</span>)
+finy =<span class="st"> </span><span class="kw">subset</span>(fin, <span class="st">&#39;chr == &quot;chrY&quot;&#39;</span>, <span class="dt">genomesubset=</span><span class="ot">TRUE</span>)
+finy</code></pre>
+<pre><code>## ballgown instance with 433 transcripts and 95 samples</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(<span class="kw">pData</span>(finy)$sex)</code></pre>
+<pre><code>## 
+## female   male 
+##     58     37</code></pre>
+<p>So we are doing a 58 vs. 37 comparison, with 58 females in the analysis, on 433 assembled Y-chromosome transcripts:</p>
+<pre class="sourceCode r"><code class="sourceCode r">positive_results_all =<span class="st"> </span><span class="kw">stattest</span>(finy, <span class="dt">feature=</span><span class="st">&#39;transcript&#39;</span>, <span class="dt">meas=</span><span class="st">&#39;FPKM&#39;</span>, <span class="dt">covariate=</span><span class="st">&#39;sex&#39;</span>)</code></pre>
+<p>We will only keep/analyze results from transcripts whose mean FPKM value across the male FIN samples is greater than 0.01 (and re-adjust p-values accordingly):</p>
+<pre class="sourceCode r"><code class="sourceCode r">male_means =<span class="st"> </span><span class="kw">rowMeans</span>(<span class="kw">texpr</span>(finy)[,<span class="kw">pData</span>(finy)$sex==<span class="st">&#39;male&#39;</span>])
+positive_results =<span class="st"> </span>positive_results_all[male_means &gt;=<span class="st"> </span><span class="fl">0.01</span>,]
+positive_results$qval =<span class="st"> </span><span class="kw">p.adjust</span>(positive_results$pval, <span class="st">&#39;fdr&#39;</span>)
+<span class="kw">summary</span>(positive_results$qval)</code></pre>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##  0.0000  0.0002  0.0157  0.1920  0.2910  0.9920</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sum</span>(positive_results$qval &lt;<span class="st"> </span><span class="fl">0.05</span>) /<span class="st"> </span><span class="kw">nrow</span>(positive_results)</code></pre>
+<pre><code>## [1] 0.5733</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sum</span>(positive_results$qval &lt;<span class="st"> </span><span class="fl">0.2</span>) /<span class="st"> </span><span class="kw">nrow</span>(positive_results)</code></pre>
+<pre><code>## [1] 0.7156</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">hist</span>(positive_results$pval, <span class="dt">breaks=</span><span class="dv">30</span>, <span class="dt">col=</span><span class="st">&#39;gray&#39;</span>, <span class="dt">xlab=</span><span class="st">&#39;p-values&#39;</span>, <span class="dt">main=</span><span class="st">&#39;Y-chromosome p-values&#39;</span>)</code></pre>
+<div class="figure">
+<img src="figure/unnamed-chunk-5.svg" alt="plot of chunk unnamed-chunk-5" /><p class="caption">plot of chunk unnamed-chunk-5</p>
+</div>
+<p>Here the p-value histogram shows a very strong signal, as was to be expected, and the proportion of q-values below 0.2 is 0.7156, showing that Ballgown's statistical significance estimates render researchers capable of detecting real differential expression.</p>
+<p>Cuffdiff analysis is reported in a separate file.</p>
+<p>We also compare to the results of an EBSeq analysis:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(EBSeq)</code></pre>
+<pre><code>## Loading required package: blockmodeling
+## Loading required package: gplots
+## KernSmooth 2.23 loaded
+## Copyright M. P. Wand 1997-2009
+## 
+## Attaching package: &#39;gplots&#39;
+## 
+## The following object is masked from &#39;package:IRanges&#39;:
+## 
+##     space
+## 
+## The following object is masked from &#39;package:stats&#39;:
+## 
+##     lowess</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(reshape2)
+rdata =<span class="st"> </span><span class="kw">read.table</span>(<span class="st">&#39;isoforms.read_group_tracking&#39;</span>, <span class="dt">header=</span><span class="ot">TRUE</span>, <span class="dt">sep=</span><span class="st">&#39;</span><span class="ch">\t</span><span class="st">&#39;</span>)
+Data =<span class="st"> </span><span class="kw">acast</span>(rdata, <span class="dt">formula=</span>tracking_id~replicate+condition, <span class="dt">value.var=</span><span class="st">&#39;raw_frags&#39;</span>)
+Conditions =<span class="st"> </span>ballgown:::<span class="kw">ss</span>(<span class="kw">colnames</span>(Data), <span class="dt">pattern=</span><span class="st">&#39;_&#39;</span>, <span class="dt">slot=</span><span class="dv">2</span>)
+IsoformNames =<span class="st"> </span><span class="kw">rownames</span>(Data)
+iso_gene_relationship =<span class="st"> </span><span class="kw">read.table</span>(<span class="st">&#39;isoform_exp.diff&#39;</span>, 
+    <span class="dt">colClasses=</span><span class="kw">c</span>(<span class="st">&#39;character&#39;</span>, <span class="st">&#39;character&#39;</span>, <span class="kw">rep</span>(<span class="st">&#39;NULL&#39;</span>, <span class="dv">12</span>)), <span class="dt">header=</span><span class="ot">TRUE</span>)
+<span class="kw">sum</span>(IsoformNames !=<span class="st"> </span>iso_gene_relationship$test_id) <span class="co"># expect 0</span></code></pre>
+<pre><code>## [1] 0</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">IsosGeneNames =<span class="st"> </span>iso_gene_relationship$gene_id
+IsoSizes =<span class="st"> </span><span class="kw">MedianNorm</span>(Data)
+NgList =<span class="st"> </span><span class="kw">GetNg</span>(IsoformNames, IsosGeneNames)
+IsoNgTrun =<span class="st"> </span>NgList$IsoformNgTrun
+
+<span class="kw">system.time</span>(IsoEBOut &lt;-<span class="st"> </span><span class="kw">EBTest</span>(<span class="dt">Data=</span>Data, <span class="dt">NgVector=</span>IsoNgTrun, 
+    <span class="dt">Conditions=</span><span class="kw">as.factor</span>(Conditions), <span class="dt">sizeFactors=</span>IsoSizes, <span class="dt">maxround=</span><span class="dv">20</span>))</code></pre>
+<pre><code>## Removing transcripts with 75 th quantile &lt; = 10 
+## 37326 transcripts will be tested</code></pre>
+<pre><code>## iteration 1 done 
+## 
+## time 3017.75 
+## 
+## iteration 2 done 
+## 
+## time 758.54 
+## 
+## iteration 3 done 
+## 
+## time 598.86 
+## 
+## iteration 4 done 
+## 
+## time 581.69 
+## 
+## iteration 5 done 
+## 
+## time 595.68 
+## 
+## iteration 6 done 
+## 
+## time 543.7 
+## 
+## iteration 7 done 
+## 
+## time 492.79 
+## 
+## iteration 8 done 
+## 
+## time 515.47 
+## 
+## iteration 9 done 
+## 
+## time 533.84 
+## 
+## iteration 10 done 
+## 
+## time 540.05 
+## 
+## iteration 11 done 
+## 
+## time 544.24 
+## 
+## iteration 12 done 
+## 
+## time 517.62 
+## 
+## iteration 13 done 
+## 
+## time 505.32 
+## 
+## iteration 14 done 
+## 
+## time 512.64 
+## 
+## iteration 15 done 
+## 
+## time 478.24 
+## 
+## iteration 16 done 
+## 
+## time 477.98 
+## 
+## iteration 17 done 
+## 
+## time 485.47 
+## 
+## iteration 18 done 
+## 
+## time 486.29 
+## 
+## iteration 19 done 
+## 
+## time 461.98 
+## 
+## iteration 20 done 
+## 
+## time 496.86</code></pre>
+<pre><code>##     user   system  elapsed 
+## 12971.89    14.26 13236.31</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># check convergence</span>
+IsoEBOut$Alpha</code></pre>
+<pre><code>##          [,1]
+## iter1  0.8960
+## iter2  0.9513
+## iter3  0.9564
+## iter4  0.9533
+## iter5  0.9483
+## iter6  0.9474
+## iter7  0.9438
+## iter8  0.9457
+## iter9  0.9457
+## iter10 0.9457
+## iter11 0.9457
+## iter12 0.9457
+## iter13 0.9457
+## iter14 0.9457
+## iter15 0.9457
+## iter16 0.9457
+## iter17 0.9457
+## iter18 0.9457
+## iter19 0.9457
+## iter20 0.9457</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">IsoEBOut$Beta</code></pre>
+<pre><code>##          Ng1    Ng2   Ng3
+## iter1  4.394  5.989 11.27
+## iter2  4.757  9.905 10.97
+## iter3  4.827  9.960 11.07
+## iter4  4.797 10.066 10.99
+## iter5  4.762  9.979 10.99
+## iter6  4.768  9.996 10.97
+## iter7  4.770  9.826 10.93
+## iter8  4.755  9.949 10.93
+## iter9  4.755  9.949 10.93
+## iter10 4.755  9.949 10.93
+## iter11 4.755  9.949 10.93
+## iter12 4.755  9.949 10.93
+## iter13 4.755  9.949 10.93
+## iter14 4.755  9.949 10.93
+## iter15 4.755  9.949 10.93
+## iter16 4.755  9.949 10.93
+## iter17 4.755  9.949 10.93
+## iter18 4.755  9.949 10.93
+## iter19 4.755  9.949 10.93
+## iter20 4.755  9.949 10.93</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">IsoEBOut$P</code></pre>
+<pre><code>##           [,1]
+## iter1  0.08780
+## iter2  0.04364
+## iter3  0.03155
+## iter4  0.02749
+## iter5  0.02589
+## iter6  0.02515
+## iter7  0.02493
+## iter8  0.02420
+## iter9  0.02420
+## iter10 0.02420
+## iter11 0.02420
+## iter12 0.02420
+## iter13 0.02420
+## iter14 0.02420
+## iter15 0.02420
+## iter16 0.02420
+## iter17 0.02420
+## iter18 0.02420
+## iter19 0.02420
+## iter20 0.02420</code></pre>
+<p>We see that EBSeq called 337 transcripts (0.9029 percent) differentially expressed (posterior probability of being differentially expressed at least 0.95), and if we move the PPDE cutoff to 0.8, EBSeq called 463 transcripts (1.2404 percent) differerentially expressed.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sessionInfo</span>()</code></pre>
+<pre><code>## R version 3.1.0 Patched (2014-04-24 r65479)
+## Platform: x86_64-unknown-linux-gnu (64-bit)
+## 
+## locale:
+##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+##  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+##  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+##  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+## [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+## 
+## attached base packages:
+## [1] parallel  stats     graphics  grDevices utils     datasets  methods  
+## [8] base     
+## 
+## other attached packages:
+## [1] reshape2_1.4        EBSeq_1.5.3         gplots_2.13.0      
+## [4] blockmodeling_0.1.8 IRanges_1.99.23     S4Vectors_0.1.2    
+## [7] BiocGenerics_0.11.3 ballgown_0.99.3     colorout_1.0-2     
+## 
+## loaded via a namespace (and not attached):
+##  [1] BatchJobs_1.3            BBmisc_1.7              
+##  [3] Biobase_2.25.0           BiocParallel_0.7.7      
+##  [5] Biostrings_2.33.13       bitops_1.0-6            
+##  [7] brew_1.0-6               caTools_1.17            
+##  [9] checkmate_1.1            codetools_0.2-8         
+## [11] corpcor_1.6.6            DBI_0.2-7               
+## [13] digest_0.6.4             evaluate_0.5.5          
+## [15] fail_1.2                 foreach_1.4.2           
+## [17] formatR_0.10             gdata_2.13.3            
+## [19] GenomeInfoDb_1.1.13      GenomicAlignments_1.1.22
+## [21] GenomicRanges_1.17.26    gtools_3.4.0            
+## [23] iterators_1.0.7          KernSmooth_2.23-12      
+## [25] knitr_1.6                limma_3.20.4            
+## [27] plyr_1.8.1               RColorBrewer_1.0-5      
+## [29] Rcpp_0.11.1              RCurl_1.95-4.1          
+## [31] Rsamtools_1.17.31        RSQLite_0.11.4          
+## [33] rtracklayer_1.25.13      sendmailR_1.1-2         
+## [35] splines_3.1.0            stats4_3.1.0            
+## [37] stringr_0.6.2            sva_3.10.0              
+## [39] tools_3.1.0              XML_3.98-1.1            
+## [41] XVector_0.5.7            zlibbioc_1.10.0</code></pre>
