@@ -15,7 +15,7 @@ If you'd rather run Cuffdiff yourself, you can use my script, `cuffdiff.sh`. It 
 You'll also need:
 
 * [fpkm.rda](http://files.figshare.com/1625419/fpkm.rda) and [rcount.rda](http://files.figshare.com/1625424/rcount.rda) (processed GEUVADIS Ballgown objects; created with code [here](https://github.com/alyssafrazee/ballgown_code/tree/master/GEUVADIS_preprocessing))
-* The [ballgown](http://www.bioconductor.org/packages/release/bioc/html/ballgown.html) and [EdgeR](http://www.bioconductor.org/packages/release/bioc/html/edgeR.html) R packages from Bioconductor.
+* The [ballgown](http://www.bioconductor.org/packages/release/bioc/html/ballgown.html), [EdgeR](http://www.bioconductor.org/packages/release/bioc/html/edgeR.html), and [EBSeq](http://www.bioconductor.org/packages/release/bioc/html/EBSeq.html) R packages from Bioconductor.
 
 Once you have the required output (Cuffdiff files, rda files, and required R packages), you can just [knit](http://yihui.name/knitr/) the file `negative_control.Rmd`. 
 
