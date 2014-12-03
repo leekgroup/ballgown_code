@@ -2,3 +2,5 @@
 rin_analysis.R
 *.pdf
 *.rda
+RIN_analysis.md
+figure/

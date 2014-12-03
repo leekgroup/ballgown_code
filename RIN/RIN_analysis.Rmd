@@ -107,7 +107,7 @@ plotfitted = function(results, rowInd, bgobj, lib_adj,
 }
 ```
 
-Here are the RIN panels for Figure 2. Associated data is written to CSV.
+Here are the RIN panels for Figure 1 (Figure 1c-d). Associated data is written to CSV.
 
 ```{r}
 plotfitted(results_sorted, 242, gbg, libadjust, pch=19, col="#00000050", legloc='bottomleft', writecsv=TRUE, fname='1c.csv')
@@ -152,13 +152,13 @@ curvebetter_sort = statres_poly_or_not[order(statres_poly_or_not$pval),]
 length(which(curvebetter_sort$qval < 0.05))
 ```
 
-The result from the transcript in Figure 3a is:
+The result from the transcript in Figure 1c is:
 
 ```{r}
 curvebetter_sort[which(curvebetter_sort$id == 25081),]$qval
 ```
 
-And the result from the transcript in Figure 3b is:
+And the result from the transcript in Figure 1d is:
 
 ```{r}
 curvebetter_sort[which(curvebetter_sort$id == 37164),]$qval
@@ -168,7 +168,7 @@ Both show that the polynomial fit is significantly better than the linear fit.
 
 ## Distribution of RIN effects
 
-Next, we investigate the distribution of RIN effects: if a transcript's expression measurement is affected by RIN (RNA quality), the relationship is more likely to be positive than negative, i.e., it makes more sense that better RNA quality means higher transcript expression measurements. To investigate this, we'll make a histogram of empirical Bayes (shrunk) t-statistics for the estimated linear RIN coefficients for each transcript (this is what was Supplementary Figure 2 in the original manuscript):
+Next, we investigate the distribution of RIN effects: if a transcript's expression measurement is affected by RIN (RNA quality), the relationship is more likely to be positive than negative, i.e., it makes more sense that better RNA quality means higher transcript expression measurements. To investigate this, we'll make a histogram of empirical Bayes (shrunk) t-statistics for the estimated linear RIN coefficients for each transcript (Supplementary Figure 8):
 
 ```{r, message=FALSE}
 library(limma)
@@ -192,7 +192,7 @@ As expected, the distribution of t-statistics is shifted toward positive statist
 
 ## Coverage vs. FPKM
 
-Finally, we'll repeat the RIN analysis using average coverage instead of FPKM as the expression measurement. We will need another Ballgown object for this, available [here](http://files.figshare.com/1625417/cov.rda). This code makes what was Figure 6d in the original preprint. Transcripts are downsampled to make the plot somewhat readable.
+Finally, we'll repeat the RIN analysis using average coverage instead of FPKM as the expression measurement. We will need another Ballgown object for this, available [here](http://files.figshare.com/1625417/cov.rda). This code makes Supplementary Figure 7c. Transcripts are downsampled to make the plot somewhat readable.
 
 ```{r, warning=FALSE}
 load('cov.rda')
