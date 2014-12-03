@@ -5,7 +5,7 @@ This code executes the positive control (Y-chromosome) experiment in the [ballgo
 * Figure 1b
 * Supplementary Figure 4
 
-You will need Cuffdiff output to run this code. The file `isoform_exp.diff` is available in this repo, and you can download `Y_isoforms.read_group_tracking` [at this link](https://www.dropbox.com/s/jxesfrketa0iwgx/Y_isoforms.read_group_tracking.gz?dl=0) (unzip before using).
+You will need Cuffdiff output to run this code. The file `isoform_exp.diff` is available in this repo, and you can download `Y_isoforms.read_group_tracking.gz` [at this link](https://www.dropbox.com/s/jxesfrketa0iwgx/Y_isoforms.read_group_tracking.gz?dl=0).
 
 If you want to run Cuffdiff yourself, my script is here (`cuffdiff.sh`). It downloads the required GEUVADIS BAM files into the working directory. You'll need about 300G of disk space for this. You will also need the merged.gtf file created using the [GEUVADIS preprocessing code](https://github.com/alyssafrazee/ballgown_code/tree/master/GEUVADIS_preprocessing). You can download that from the `negative_control` experiment folder in this repo (i.e., [here](https://github.com/alyssafrazee/ballgown_code/blob/master/negative_control/merged.gtf.gz)). Unzip before using. Finally, you'll need the `sex_info.txt` file from this repo, and you'll need Cuffdiff in your path. 
 
