@@ -16,3 +16,10 @@ positive_control/cache
 positive_control/*.rda
 positive_control/Y_isoforms.read_group_tracking.gz
 positive_control/positive_control.md
+simulations/FPKM/ballgown/
+simulations/FPKM/cuffdiff/
+simulations/FPKM/de_ids.txt
+simulations/NB/ballgown
+simulations/NB/cuffdiff
+simulations/NB/de_ids.txt
+genes-clean.gtf
