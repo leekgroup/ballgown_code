@@ -8,36 +8,35 @@ Scripts for each analysis section are available in the relevant subfolder.
 
 ### simulations
 All simulation results from the paper were produced with scripts in this folder. Simulation results include:  
-* Figure 2c and 2d
-* Figure 6a, 6b, and 6c
-* Supplementary Figure 1 (both panels)
+* Supplementary Figure 6
+* Supplementary Figure 7a-b
 
-This code also gives numerical results presented in the "Statistical significance comparisons" section of the paper.
+This code also gives numerical results presented in Supplementary Note 5. 
 
 ### InSilicoDB
-The manuscript examines statistical significance results from two datasets downloaded from [InSilico DB](https://insilicodb.com/). This analysis includes Figure 2a and 2b, as well as numerical results in the "Statistical significance comparisons" section.
+The manuscript examines statistical significance results from two datasets downloaded from [InSilico DB](https://insilicodb.com/). This analysis includes Supplementary Figure 5 and some numerical results in the main manuscript.
 
 ### GEUVADIS_preprocessing
 The manuscript includes a re-analysis of the [GEUVADIS RNA-sequencing dataset](http://www.geuvadis.org/web/geuvadis/rnaseq-project). This folder includes scripts for downloading and aligning reads, assembling the transcriptome, estimating transcript abundances, and organizing the expression measurements into the GEUVADIS ballgown object (see "GEUVADIS ballgown object" in the data section). The ballgown object was used for the eQTL and RIN analyses.
 
 ### RIN
 Analysis investigating the relationship between RNA quality (RIN) and transcript expression was done with the script in this folder. This analysis includes:  
-* Figure 3 (both panels)
-* Figure 6d
-* Supplementary Figure 2
+* Figure 1c-d
+* Supplementary Figure 7c
+* Supplementary Figure 8
 
-This code also gives the numerical results in the "Analysis of quantitative covariates" (subsection of "Flexibility of statistical models") section of the manuscript.
+This code also gives some numerical results in the main manuscript. 
 
 ### eQTL
 Analysis of Expression Quantitative Trait Loci in the GEUVADIS dataset. Specifically this analysis includes:
-* Figure 4 (both panels)
-* Supplementary Figure 3 (both panels)
-* Numerical results in the "Expression quantitative trait locus analysis" section of the main manuscript (subsection of "Flexibility of statistical models") and in the "eQTL analysis" section of the supplement (subsection of "Data Analyses").
+* Figure 1e-f
+* Supplementary Figure 9
+* Numerical results in the main manuscript and Supplementary Note 8
 
 ### timing
 Computational times for many of the analyses presented in the manuscript. Specifically this folder includes code for:
-* Figure 5 (all panels)
-* All timing results in the "Computational time comparison" section 
+* Supplementary Figure 10
+* Supplementary Note 9
 
 ## data
 The following data is currently available on Dropbox. Other relevant data is stored in the subfolders. All Dropbox links are also referenced in subfolder README files.
