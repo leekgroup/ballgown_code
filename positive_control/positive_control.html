@@ -1,271 +1,543 @@
-<p>The previous experiment, the negative control, showed that Ballgown's default statistical tests are appropriately conservative when there is no signal present in the data. Here we do an experiment to show that these statistical tests are capable of making discoveries when differential expression really is present.</p>
-<p>For this experiment you will need <code>fpkm.rda</code> (<a href="http://files.figshare.com/1625419/fpkm.rda">download here</a>).</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ballgown)
-<span class="kw">load</span>(<span class="st">&#39;fpkm.rda&#39;</span>)
-<span class="kw">head</span>(<span class="kw">pData</span>(fpkm))</code></pre>
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+<title></title>
+
+<script type="text/javascript">
+window.onload = function() {
+  var imgs = document.getElementsByTagName('img'), i, img;
+  for (i = 0; i < imgs.length; i++) {
+    img = imgs[i];
+    // center an image if it is the only element of its parent
+    if (img.parentElement.childElementCount === 1)
+      img.parentElement.style.textAlign = 'center';
+  }
+};
+</script>
+
+<!-- Styles for R syntax highlighter -->
+<style type="text/css">
+   pre .operator,
+   pre .paren {
+     color: rgb(104, 118, 135)
+   }
+
+   pre .literal {
+     color: #990073
+   }
+
+   pre .number {
+     color: #099;
+   }
+
+   pre .comment {
+     color: #998;
+     font-style: italic
+   }
+
+   pre .keyword {
+     color: #900;
+     font-weight: bold
+   }
+
+   pre .identifier {
+     color: rgb(0, 0, 0);
+   }
+
+   pre .string {
+     color: #d14;
+   }
+</style>
+
+<!-- R syntax highlighter -->
+<script type="text/javascript">
+var hljs=new function(){function m(p){return p.replace(/&/gm,"&amp;").replace(/</gm,"&lt;")}function f(r,q,p){return RegExp(q,"m"+(r.cI?"i":"")+(p?"g":""))}function b(r){for(var p=0;p<r.childNodes.length;p++){var q=r.childNodes[p];if(q.nodeName=="CODE"){return q}if(!(q.nodeType==3&&q.nodeValue.match(/\s+/))){break}}}function h(t,s){var p="";for(var r=0;r<t.childNodes.length;r++){if(t.childNodes[r].nodeType==3){var q=t.childNodes[r].nodeValue;if(s){q=q.replace(/\n/g,"")}p+=q}else{if(t.childNodes[r].nodeName=="BR"){p+="\n"}else{p+=h(t.childNodes[r])}}}if(/MSIE [678]/.test(navigator.userAgent)){p=p.replace(/\r/g,"\n")}return p}function a(s){var r=s.className.split(/\s+/);r=r.concat(s.parentNode.className.split(/\s+/));for(var q=0;q<r.length;q++){var p=r[q].replace(/^language-/,"");if(e[p]){return p}}}function c(q){var p=[];(function(s,t){for(var r=0;r<s.childNodes.length;r++){if(s.childNodes[r].nodeType==3){t+=s.childNodes[r].nodeValue.length}else{if(s.childNodes[r].nodeName=="BR"){t+=1}else{if(s.childNodes[r].nodeType==1){p.push({event:"start",offset:t,node:s.childNodes[r]});t=arguments.callee(s.childNodes[r],t);p.push({event:"stop",offset:t,node:s.childNodes[r]})}}}}return t})(q,0);return p}function k(y,w,x){var q=0;var z="";var s=[];function u(){if(y.length&&w.length){if(y[0].offset!=w[0].offset){return(y[0].offset<w[0].offset)?y:w}else{return w[0].event=="start"?y:w}}else{return y.length?y:w}}function t(D){var A="<"+D.nodeName.toLowerCase();for(var B=0;B<D.attributes.length;B++){var C=D.attributes[B];A+=" "+C.nodeName.toLowerCase();if(C.value!==undefined&&C.value!==false&&C.value!==null){A+='="'+m(C.value)+'"'}}return A+">"}while(y.length||w.length){var v=u().splice(0,1)[0];z+=m(x.substr(q,v.offset-q));q=v.offset;if(v.event=="start"){z+=t(v.node);s.push(v.node)}else{if(v.event=="stop"){var p,r=s.length;do{r--;p=s[r];z+=("</"+p.nodeName.toLowerCase()+">")}while(p!=v.node);s.splice(r,1);while(r<s.length){z+=t(s[r]);r++}}}}return z+m(x.substr(q))}function j(){function q(x,y,v){if(x.compiled){return}var u;var s=[];if(x.k){x.lR=f(y,x.l||hljs.IR,true);for(var w in x.k){if(!x.k.hasOwnProperty(w)){continue}if(x.k[w] instanceof Object){u=x.k[w]}else{u=x.k;w="keyword"}for(var r in u){if(!u.hasOwnProperty(r)){continue}x.k[r]=[w,u[r]];s.push(r)}}}if(!v){if(x.bWK){x.b="\\b("+s.join("|")+")\\s"}x.bR=f(y,x.b?x.b:"\\B|\\b");if(!x.e&&!x.eW){x.e="\\B|\\b"}if(x.e){x.eR=f(y,x.e)}}if(x.i){x.iR=f(y,x.i)}if(x.r===undefined){x.r=1}if(!x.c){x.c=[]}x.compiled=true;for(var t=0;t<x.c.length;t++){if(x.c[t]=="self"){x.c[t]=x}q(x.c[t],y,false)}if(x.starts){q(x.starts,y,false)}}for(var p in e){if(!e.hasOwnProperty(p)){continue}q(e[p].dM,e[p],true)}}function d(B,C){if(!j.called){j();j.called=true}function q(r,M){for(var L=0;L<M.c.length;L++){if((M.c[L].bR.exec(r)||[null])[0]==r){return M.c[L]}}}function v(L,r){if(D[L].e&&D[L].eR.test(r)){return 1}if(D[L].eW){var M=v(L-1,r);return M?M+1:0}return 0}function w(r,L){return L.i&&L.iR.test(r)}function K(N,O){var M=[];for(var L=0;L<N.c.length;L++){M.push(N.c[L].b)}var r=D.length-1;do{if(D[r].e){M.push(D[r].e)}r--}while(D[r+1].eW);if(N.i){M.push(N.i)}return f(O,M.join("|"),true)}function p(M,L){var N=D[D.length-1];if(!N.t){N.t=K(N,E)}N.t.lastIndex=L;var r=N.t.exec(M);return r?[M.substr(L,r.index-L),r[0],false]:[M.substr(L),"",true]}function z(N,r){var L=E.cI?r[0].toLowerCase():r[0];var M=N.k[L];if(M&&M instanceof Array){return M}return false}function F(L,P){L=m(L);if(!P.k){return L}var r="";var O=0;P.lR.lastIndex=0;var M=P.lR.exec(L);while(M){r+=L.substr(O,M.index-O);var N=z(P,M);if(N){x+=N[1];r+='<span class="'+N[0]+'">'+M[0]+"</span>"}else{r+=M[0]}O=P.lR.lastIndex;M=P.lR.exec(L)}return r+L.substr(O,L.length-O)}function J(L,M){if(M.sL&&e[M.sL]){var r=d(M.sL,L);x+=r.keyword_count;return r.value}else{return F(L,M)}}function I(M,r){var L=M.cN?'<span class="'+M.cN+'">':"";if(M.rB){y+=L;M.buffer=""}else{if(M.eB){y+=m(r)+L;M.buffer=""}else{y+=L;M.buffer=r}}D.push(M);A+=M.r}function G(N,M,Q){var R=D[D.length-1];if(Q){y+=J(R.buffer+N,R);return false}var P=q(M,R);if(P){y+=J(R.buffer+N,R);I(P,M);return P.rB}var L=v(D.length-1,M);if(L){var O=R.cN?"</span>":"";if(R.rE){y+=J(R.buffer+N,R)+O}else{if(R.eE){y+=J(R.buffer+N,R)+O+m(M)}else{y+=J(R.buffer+N+M,R)+O}}while(L>1){O=D[D.length-2].cN?"</span>":"";y+=O;L--;D.length--}var r=D[D.length-1];D.length--;D[D.length-1].buffer="";if(r.starts){I(r.starts,"")}return R.rE}if(w(M,R)){throw"Illegal"}}var E=e[B];var D=[E.dM];var A=0;var x=0;var y="";try{var s,u=0;E.dM.buffer="";do{s=p(C,u);var t=G(s[0],s[1],s[2]);u+=s[0].length;if(!t){u+=s[1].length}}while(!s[2]);if(D.length>1){throw"Illegal"}return{r:A,keyword_count:x,value:y}}catch(H){if(H=="Illegal"){return{r:0,keyword_count:0,value:m(C)}}else{throw H}}}function g(t){var p={keyword_count:0,r:0,value:m(t)};var r=p;for(var q in e){if(!e.hasOwnProperty(q)){continue}var s=d(q,t);s.language=q;if(s.keyword_count+s.r>r.keyword_count+r.r){r=s}if(s.keyword_count+s.r>p.keyword_count+p.r){r=p;p=s}}if(r.language){p.second_best=r}return p}function i(r,q,p){if(q){r=r.replace(/^((<[^>]+>|\t)+)/gm,function(t,w,v,u){return w.replace(/\t/g,q)})}if(p){r=r.replace(/\n/g,"<br>")}return r}function n(t,w,r){var x=h(t,r);var v=a(t);var y,s;if(v){y=d(v,x)}else{return}var q=c(t);if(q.length){s=document.createElement("pre");s.innerHTML=y.value;y.value=k(q,c(s),x)}y.value=i(y.value,w,r);var u=t.className;if(!u.match("(\\s|^)(language-)?"+v+"(\\s|$)")){u=u?(u+" "+v):v}if(/MSIE [678]/.test(navigator.userAgent)&&t.tagName=="CODE"&&t.parentNode.tagName=="PRE"){s=t.parentNode;var p=document.createElement("div");p.innerHTML="<pre><code>"+y.value+"</code></pre>";t=p.firstChild.firstChild;p.firstChild.cN=s.cN;s.parentNode.replaceChild(p.firstChild,s)}else{t.innerHTML=y.value}t.className=u;t.result={language:v,kw:y.keyword_count,re:y.r};if(y.second_best){t.second_best={language:y.second_best.language,kw:y.second_best.keyword_count,re:y.second_best.r}}}function o(){if(o.called){return}o.called=true;var r=document.getElementsByTagName("pre");for(var p=0;p<r.length;p++){var q=b(r[p]);if(q){n(q,hljs.tabReplace)}}}function l(){if(window.addEventListener){window.addEventListener("DOMContentLoaded",o,false);window.addEventListener("load",o,false)}else{if(window.attachEvent){window.attachEvent("onload",o)}else{window.onload=o}}}var e={};this.LANGUAGES=e;this.highlight=d;this.highlightAuto=g;this.fixMarkup=i;this.highlightBlock=n;this.initHighlighting=o;this.initHighlightingOnLoad=l;this.IR="[a-zA-Z][a-zA-Z0-9_]*";this.UIR="[a-zA-Z_][a-zA-Z0-9_]*";this.NR="\\b\\d+(\\.\\d+)?";this.CNR="\\b(0[xX][a-fA-F0-9]+|(\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)";this.BNR="\\b(0b[01]+)";this.RSR="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|\\.|-|-=|/|/=|:|;|<|<<|<<=|<=|=|==|===|>|>=|>>|>>=|>>>|>>>=|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~";this.ER="(?![\\s\\S])";this.BE={b:"\\\\.",r:0};this.ASM={cN:"string",b:"'",e:"'",i:"\\n",c:[this.BE],r:0};this.QSM={cN:"string",b:'"',e:'"',i:"\\n",c:[this.BE],r:0};this.CLCM={cN:"comment",b:"//",e:"$"};this.CBLCLM={cN:"comment",b:"/\\*",e:"\\*/"};this.HCM={cN:"comment",b:"#",e:"$"};this.NM={cN:"number",b:this.NR,r:0};this.CNM={cN:"number",b:this.CNR,r:0};this.BNM={cN:"number",b:this.BNR,r:0};this.inherit=function(r,s){var p={};for(var q in r){p[q]=r[q]}if(s){for(var q in s){p[q]=s[q]}}return p}}();hljs.LANGUAGES.cpp=function(){var a={keyword:{"false":1,"int":1,"float":1,"while":1,"private":1,"char":1,"catch":1,"export":1,virtual:1,operator:2,sizeof:2,dynamic_cast:2,typedef:2,const_cast:2,"const":1,struct:1,"for":1,static_cast:2,union:1,namespace:1,unsigned:1,"long":1,"throw":1,"volatile":2,"static":1,"protected":1,bool:1,template:1,mutable:1,"if":1,"public":1,friend:2,"do":1,"return":1,"goto":1,auto:1,"void":2,"enum":1,"else":1,"break":1,"new":1,extern:1,using:1,"true":1,"class":1,asm:1,"case":1,typeid:1,"short":1,reinterpret_cast:2,"default":1,"double":1,register:1,explicit:1,signed:1,typename:1,"try":1,"this":1,"switch":1,"continue":1,wchar_t:1,inline:1,"delete":1,alignof:1,char16_t:1,char32_t:1,constexpr:1,decltype:1,noexcept:1,nullptr:1,static_assert:1,thread_local:1,restrict:1,_Bool:1,complex:1},built_in:{std:1,string:1,cin:1,cout:1,cerr:1,clog:1,stringstream:1,istringstream:1,ostringstream:1,auto_ptr:1,deque:1,list:1,queue:1,stack:1,vector:1,map:1,set:1,bitset:1,multiset:1,multimap:1,unordered_set:1,unordered_map:1,unordered_multiset:1,unordered_multimap:1,array:1,shared_ptr:1}};return{dM:{k:a,i:"</",c:[hljs.CLCM,hljs.CBLCLM,hljs.QSM,{cN:"string",b:"'\\\\?.",e:"'",i:"."},{cN:"number",b:"\\b(\\d+(\\.\\d*)?|\\.\\d+)(u|U|l|L|ul|UL|f|F)"},hljs.CNM,{cN:"preprocessor",b:"#",e:"$"},{cN:"stl_container",b:"\\b(deque|list|queue|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array)\\s*<",e:">",k:a,r:10,c:["self"]}]}}}();hljs.LANGUAGES.r={dM:{c:[hljs.HCM,{cN:"number",b:"\\b0[xX][0-9a-fA-F]+[Li]?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+(?:[eE][+\\-]?\\d*)?L\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+\\.(?!\\d)(?:i\\b)?",e:hljs.IMMEDIATE_RE,r:1},{cN:"number",b:"\\b\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\.\\d+(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"keyword",b:"(?:tryCatch|library|setGeneric|setGroupGeneric)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\.",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\d+(?![\\w.])",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\b(?:function)",e:hljs.IMMEDIATE_RE,r:2},{cN:"keyword",b:"(?:if|in|break|next|repeat|else|for|return|switch|while|try|stop|warning|require|attach|detach|source|setMethod|setClass)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"literal",b:"(?:NA|NA_integer_|NA_real_|NA_character_|NA_complex_)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"literal",b:"(?:NULL|TRUE|FALSE|T|F|Inf|NaN)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"identifier",b:"[a-zA-Z.][a-zA-Z0-9._]*\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"<\\-(?!\\s*\\d)",e:hljs.IMMEDIATE_RE,r:2},{cN:"operator",b:"\\->|<\\-",e:hljs.IMMEDIATE_RE,r:1},{cN:"operator",b:"%%|~",e:hljs.IMMEDIATE_RE},{cN:"operator",b:">=|<=|==|!=|\\|\\||&&|=|\\+|\\-|\\*|/|\\^|>|<|!|&|\\||\\$|:",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"%",e:"%",i:"\\n",r:1},{cN:"identifier",b:"`",e:"`",r:0},{cN:"string",b:'"',e:'"',c:[hljs.BE],r:0},{cN:"string",b:"'",e:"'",c:[hljs.BE],r:0},{cN:"paren",b:"[[({\\])}]",e:hljs.IMMEDIATE_RE,r:0}]}};
+hljs.initHighlightingOnLoad();
+</script>
+
+
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 13px;
+}
+
+body {
+  max-width: 800px;
+  margin: auto;
+  padding: 1em;
+  line-height: 20px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 {
+   font-size:2.2em;
+}
+
+h2 {
+   font-size:1.8em;
+}
+
+h3 {
+   font-size:1.4em;
+}
+
+h4 {
+   font-size:1.0em;
+}
+
+h5 {
+   font-size:0.9em;
+}
+
+h6 {
+   font-size:0.8em;
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre, img {
+  max-width: 100%;
+}
+pre {
+  overflow-x: auto;
+}
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code {
+  font-size: 92%;
+  border: 1px solid #ccc;
+}
+
+code[class] {
+  background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * {
+      background: transparent !important;
+      color: black !important;
+      filter:none !important;
+      -ms-filter: none !important;
+   }
+
+   body {
+      font-size:12pt;
+      max-width:100%;
+   }
+
+   a, a:visited {
+      text-decoration: underline;
+   }
+
+   hr {
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote {
+      padding-right: 1em;
+      page-break-inside: avoid;
+   }
+
+   tr, img {
+      page-break-inside: avoid;
+   }
+
+   img {
+      max-width: 100% !important;
+   }
+
+   @page :left {
+      margin: 15mm 20mm 15mm 10mm;
+   }
+
+   @page :right {
+      margin: 15mm 10mm 15mm 20mm;
+   }
+
+   p, h2, h3 {
+      orphans: 3; widows: 3;
+   }
+
+   h2, h3 {
+      page-break-after: avoid;
+   }
+}
+</style>
+
+
+
+</head>
+
+<body>
+<p>The previous experiment, the negative control, showed that Ballgown&#39;s default statistical tests are appropriately conservative when there is no signal present in the data. Here we do an experiment to show that these statistical tests are capable of making discoveries when differential expression really is present.</p>
+
+<p>For this experiment you will need <code>fpkm.rda</code> (<a href="http://files.figshare.com/1625419/fpkm.rda">download here</a>). </p>
+
+<pre><code class="r">library(ballgown)
+load(&#39;fpkm.rda&#39;)
+head(pData(fpkm))
+</code></pre>
+
 <pre><code>##       dirname population IndividualID             SampleID UseThisDup RIN
 ## 20    HG00096        GBR      HG00096 HG00096.1.M_111124_6          1 8.4
 ## 211   HG00097        GBR      HG00097 HG00097.7.M_120219_2          1 9.2
 ## 408   HG00099        GBR      HG00099 HG00099.5.M_120131_3          1 9.3
 ## 526 HG00099_2        GBR      HG00099 HG00099.1.M_120209_6          0 9.3
 ## 186   HG00100        GBR      HG00100 HG00100.2.M_111215_8          1 9.5
-## 287   HG00101        GBR      HG00101 HG00101.1.M_111124_4          1 9.3</code></pre>
+## 287   HG00101        GBR      HG00101 HG00101.1.M_111124_4          1 9.3
+</code></pre>
+
 <p>Sex information was stored externally; add to object:</p>
-<pre class="sourceCode r"><code class="sourceCode r">pheno_table =<span class="st"> </span><span class="kw">read.table</span>(<span class="st">&#39;../GEUVADIS_preprocessing/pop_data_withuniqueid.txt&#39;</span>, <span class="dt">sep=</span><span class="st">&#39;</span><span class="ch">\t</span><span class="st">&#39;</span>, <span class="dt">header=</span><span class="ot">TRUE</span>)
-pd =<span class="st"> </span><span class="kw">pData</span>(fpkm)
-pd$sex =<span class="st"> </span>pheno_table$sex[<span class="kw">match</span>(pd$IndividualID, pheno_table$hapmap_id)]
-<span class="kw">pData</span>(fpkm) =<span class="st"> </span>pd</code></pre>
-<p>For the positive control, we'll analyze differential expression between males and females on the Y chromosome, using individuals from the FIN population (same as negative control experiment).</p>
-<pre class="sourceCode r"><code class="sourceCode r">fin =<span class="st"> </span><span class="kw">subset</span>(fpkm, <span class="st">&#39;population == &quot;FIN&quot; &amp; UseThisDup == 1&#39;</span>, <span class="dt">genomesubset=</span><span class="ot">FALSE</span>)
-finy =<span class="st"> </span><span class="kw">subset</span>(fin, <span class="st">&#39;chr == &quot;chrY&quot;&#39;</span>, <span class="dt">genomesubset=</span><span class="ot">TRUE</span>)
-finy</code></pre>
-<pre><code>## ballgown instance with 433 transcripts and 95 samples</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(<span class="kw">pData</span>(finy)$sex)</code></pre>
+
+<pre><code class="r">pheno_table = read.table(&#39;../GEUVADIS_preprocessing/pop_data_withuniqueid.txt&#39;, sep=&#39;\t&#39;, header=TRUE)
+pd = pData(fpkm)
+pd$sex = pheno_table$sex[match(pd$IndividualID, pheno_table$hapmap_id)]
+pData(fpkm) = pd
+</code></pre>
+
+<p>For the positive control, we&#39;ll analyze differential expression between males and females on the Y chromosome, using individuals from the FIN population (same as negative control experiment). </p>
+
+<pre><code class="r">fin = subset(fpkm, &#39;population == &quot;FIN&quot; &amp; UseThisDup == 1&#39;, genomesubset=FALSE)
+finy = subset(fin, &#39;chr == &quot;chrY&quot;&#39;, genomesubset=TRUE)
+finy
+</code></pre>
+
+<pre><code>## ballgown instance with 433 transcripts and 95 samples
+</code></pre>
+
+<pre><code class="r">table(pData(finy)$sex)
+</code></pre>
+
 <pre><code>## 
 ## female   male 
-##     58     37</code></pre>
-<p>So we are doing a 58 vs. 37 comparison, with 58 females in the analysis, on 433 assembled Y-chromosome transcripts:</p>
-<pre class="sourceCode r"><code class="sourceCode r">positive_results_all =<span class="st"> </span><span class="kw">stattest</span>(finy, <span class="dt">feature=</span><span class="st">&#39;transcript&#39;</span>, <span class="dt">meas=</span><span class="st">&#39;FPKM&#39;</span>, <span class="dt">covariate=</span><span class="st">&#39;sex&#39;</span>)</code></pre>
-<p>We will only keep/analyze results from transcripts whose mean FPKM value across the male FIN samples is greater than 0.01 (and re-adjust p-values accordingly):</p>
-<pre class="sourceCode r"><code class="sourceCode r">male_means =<span class="st"> </span><span class="kw">rowMeans</span>(<span class="kw">texpr</span>(finy)[,<span class="kw">pData</span>(finy)$sex==<span class="st">&#39;male&#39;</span>])
-positive_results =<span class="st"> </span>positive_results_all[male_means &gt;=<span class="st"> </span><span class="fl">0.01</span>,]
-positive_results$qval =<span class="st"> </span><span class="kw">p.adjust</span>(positive_results$pval, <span class="st">&#39;fdr&#39;</span>)
-<span class="kw">summary</span>(positive_results$qval)</code></pre>
-<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##  0.0000  0.0002  0.0157  0.1920  0.2910  0.9920</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sum</span>(positive_results$qval &lt;<span class="st"> </span><span class="fl">0.05</span>) /<span class="st"> </span><span class="kw">nrow</span>(positive_results)</code></pre>
-<pre><code>## [1] 0.5733</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sum</span>(positive_results$qval &lt;<span class="st"> </span><span class="fl">0.2</span>) /<span class="st"> </span><span class="kw">nrow</span>(positive_results)</code></pre>
-<pre><code>## [1] 0.7156</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">hist</span>(positive_results$pval, <span class="dt">breaks=</span><span class="dv">30</span>, <span class="dt">col=</span><span class="st">&#39;gray&#39;</span>, <span class="dt">xlab=</span><span class="st">&#39;p-values&#39;</span>, <span class="dt">main=</span><span class="st">&#39;Y-chromosome p-values&#39;</span>)</code></pre>
-<div class="figure">
-<img src="figure/unnamed-chunk-5.svg" alt="plot of chunk unnamed-chunk-5" /><p class="caption">plot of chunk unnamed-chunk-5</p>
-</div>
-<p>Here the p-value histogram shows a very strong signal, as was to be expected, and the proportion of q-values below 0.2 is 0.7156, showing that Ballgown's statistical significance estimates render researchers capable of detecting real differential expression.</p>
-<p>Cuffdiff analysis is reported in a separate file.</p>
-<p>We also compare to the results of an EBSeq analysis:</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(EBSeq)</code></pre>
-<pre><code>## Loading required package: blockmodeling
-## Loading required package: gplots
-## KernSmooth 2.23 loaded
-## Copyright M. P. Wand 1997-2009
-## 
-## Attaching package: &#39;gplots&#39;
-## 
-## The following object is masked from &#39;package:IRanges&#39;:
-## 
-##     space
-## 
-## The following object is masked from &#39;package:stats&#39;:
-## 
-##     lowess</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(reshape2)
-rdata =<span class="st"> </span><span class="kw">read.table</span>(<span class="st">&#39;isoforms.read_group_tracking&#39;</span>, <span class="dt">header=</span><span class="ot">TRUE</span>, <span class="dt">sep=</span><span class="st">&#39;</span><span class="ch">\t</span><span class="st">&#39;</span>)
-Data =<span class="st"> </span><span class="kw">acast</span>(rdata, <span class="dt">formula=</span>tracking_id~replicate+condition, <span class="dt">value.var=</span><span class="st">&#39;raw_frags&#39;</span>)
-Conditions =<span class="st"> </span>ballgown:::<span class="kw">ss</span>(<span class="kw">colnames</span>(Data), <span class="dt">pattern=</span><span class="st">&#39;_&#39;</span>, <span class="dt">slot=</span><span class="dv">2</span>)
-IsoformNames =<span class="st"> </span><span class="kw">rownames</span>(Data)
-iso_gene_relationship =<span class="st"> </span><span class="kw">read.table</span>(<span class="st">&#39;isoform_exp.diff&#39;</span>, 
-    <span class="dt">colClasses=</span><span class="kw">c</span>(<span class="st">&#39;character&#39;</span>, <span class="st">&#39;character&#39;</span>, <span class="kw">rep</span>(<span class="st">&#39;NULL&#39;</span>, <span class="dv">12</span>)), <span class="dt">header=</span><span class="ot">TRUE</span>)
-<span class="kw">sum</span>(IsoformNames !=<span class="st"> </span>iso_gene_relationship$test_id) <span class="co"># expect 0</span></code></pre>
-<pre><code>## [1] 0</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r">IsosGeneNames =<span class="st"> </span>iso_gene_relationship$gene_id
-IsoSizes =<span class="st"> </span><span class="kw">MedianNorm</span>(Data)
-NgList =<span class="st"> </span><span class="kw">GetNg</span>(IsoformNames, IsosGeneNames)
-IsoNgTrun =<span class="st"> </span>NgList$IsoformNgTrun
+##     58     37
+</code></pre>
 
-<span class="kw">system.time</span>(IsoEBOut &lt;-<span class="st"> </span><span class="kw">EBTest</span>(<span class="dt">Data=</span>Data, <span class="dt">NgVector=</span>IsoNgTrun, 
-    <span class="dt">Conditions=</span><span class="kw">as.factor</span>(Conditions), <span class="dt">sizeFactors=</span>IsoSizes, <span class="dt">maxround=</span><span class="dv">20</span>))</code></pre>
+<p>So we are doing a 58 vs. 37 comparison, with 58 females in the analysis, on 433 assembled Y-chromosome transcripts:</p>
+
+<pre><code class="r">positive_results_all = stattest(finy, feature=&#39;transcript&#39;, meas=&#39;FPKM&#39;, covariate=&#39;sex&#39;)
+</code></pre>
+
+<p>We will only keep/analyze results from transcripts whose mean FPKM value across the male FIN samples is greater than 0.01 (and re-adjust p-values accordingly):</p>
+
+<pre><code class="r">male_means = rowMeans(texpr(finy)[,pData(finy)$sex==&#39;male&#39;])
+positive_results = positive_results_all[male_means &gt;= 0.01,]
+positive_results$qval = p.adjust(positive_results$pval, &#39;fdr&#39;)
+summary(positive_results$qval)
+</code></pre>
+
+<pre><code>##      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+## 0.0000000 0.0002006 0.0156700 0.1921000 0.2908000 0.9923000
+</code></pre>
+
+<pre><code class="r">sum(positive_results$qval &lt; 0.05) / nrow(positive_results)
+</code></pre>
+
+<pre><code>## [1] 0.5733333
+</code></pre>
+
+<pre><code class="r">sum(positive_results$qval &lt; 0.2) / nrow(positive_results)
+</code></pre>
+
+<pre><code>## [1] 0.7155556
+</code></pre>
+
+<pre><code class="r">hist(positive_results$pval, breaks=30, col=&#39;gray&#39;, xlab=&#39;p-values&#39;, main=&#39;Y-chromosome p-values&#39;)
+</code></pre>
+
+<p><img src="data:image/png;base64,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" alt="plot of chunk unnamed-chunk-5"/> </p>
+
+<pre><code class="r">write.csv(positive_results$pval, file=&#39;1b.csv&#39;)
+</code></pre>
+
+<pre><code class="r">pdf(&#39;figure1b.pdf&#39;)
+hist(positive_results$pval, breaks=30, col=&#39;gray&#39;, xlab=&#39;p-values&#39;, main=&#39;Y-chromosome p-values&#39;)
+dev.off()
+</code></pre>
+
+<pre><code>## pdf 
+##   2
+</code></pre>
+
+<p>Here the p-value histogram shows a very strong signal, as was to be expected, and the proportion of q-values below 0.2 is 0.7155556, showing that Ballgown&#39;s statistical significance estimates render researchers capable of detecting real differential expression.</p>
+
+<p>Cuffdiff analysis is reported in a separate file.</p>
+
+<p>We also compare to the results of an EBSeq analysis:</p>
+
+<pre><code class="r">library(EBSeq)
+library(reshape2)
+rdata = read.table(&#39;Y_isoforms.read_group_tracking.gz&#39;, header=TRUE, sep=&#39;\t&#39;)
+Data = acast(rdata, formula=tracking_id~replicate+condition, value.var=&#39;raw_frags&#39;)
+Conditions = ballgown:::ss(colnames(Data), pattern=&#39;_&#39;, slot=2)
+IsoformNames = rownames(Data)
+iso_gene_relationship = read.table(&#39;isoform_exp.diff&#39;, 
+    colClasses=c(&#39;character&#39;, &#39;character&#39;, rep(&#39;NULL&#39;, 12)), header=TRUE)
+sum(IsoformNames != iso_gene_relationship$test_id) # expect 0
+</code></pre>
+
+<pre><code>## [1] 0
+</code></pre>
+
+<pre><code class="r">IsosGeneNames = iso_gene_relationship$gene_id
+IsoSizes = MedianNorm(Data)
+NgList = GetNg(IsoformNames, IsosGeneNames)
+IsoNgTrun = NgList$IsoformNgTrun
+
+system.time(IsoEBOut &lt;- EBTest(Data=Data, NgVector=IsoNgTrun, 
+    Conditions=as.factor(Conditions), sizeFactors=IsoSizes, maxround=20))
+</code></pre>
+
 <pre><code>## Removing transcripts with 75 th quantile &lt; = 10 
-## 37326 transcripts will be tested</code></pre>
+## 37326 transcripts will be tested
+</code></pre>
+
 <pre><code>## iteration 1 done 
 ## 
-## time 3017.75 
+## time 1747.81 
 ## 
 ## iteration 2 done 
 ## 
-## time 758.54 
+## time 417.42 
 ## 
 ## iteration 3 done 
 ## 
-## time 598.86 
+## time 295.18 
 ## 
 ## iteration 4 done 
 ## 
-## time 581.69 
+## time 286.97 
 ## 
 ## iteration 5 done 
 ## 
-## time 595.68 
+## time 284.89 
 ## 
 ## iteration 6 done 
 ## 
-## time 543.7 
+## time 240.07 
 ## 
 ## iteration 7 done 
 ## 
-## time 492.79 
+## time 221.08 
 ## 
 ## iteration 8 done 
 ## 
-## time 515.47 
+## time 222.72 
 ## 
 ## iteration 9 done 
 ## 
-## time 533.84 
+## time 240.57 
 ## 
 ## iteration 10 done 
 ## 
-## time 540.05 
+## time 240.33 
 ## 
 ## iteration 11 done 
 ## 
-## time 544.24 
+## time 237.97 
 ## 
 ## iteration 12 done 
 ## 
-## time 517.62 
+## time 259.04 
 ## 
 ## iteration 13 done 
 ## 
-## time 505.32 
+## time 262.29 
 ## 
 ## iteration 14 done 
 ## 
-## time 512.64 
+## time 341.03 
 ## 
 ## iteration 15 done 
 ## 
-## time 478.24 
+## time 246.47 
 ## 
 ## iteration 16 done 
 ## 
-## time 477.98 
+## time 244.03 
 ## 
 ## iteration 17 done 
 ## 
-## time 485.47 
+## time 284.98 
 ## 
 ## iteration 18 done 
 ## 
-## time 486.29 
+## time 299.71 
 ## 
 ## iteration 19 done 
 ## 
-## time 461.98 
+## time 241.52 
 ## 
 ## iteration 20 done 
 ## 
-## time 496.86</code></pre>
+## time 243.58
+</code></pre>
+
 <pre><code>##     user   system  elapsed 
-## 12971.89    14.26 13236.31</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># check convergence</span>
-IsoEBOut$Alpha</code></pre>
-<pre><code>##          [,1]
-## iter1  0.8960
-## iter2  0.9513
-## iter3  0.9564
-## iter4  0.9533
-## iter5  0.9483
-## iter6  0.9474
-## iter7  0.9438
-## iter8  0.9457
-## iter9  0.9457
-## iter10 0.9457
-## iter11 0.9457
-## iter12 0.9457
-## iter13 0.9457
-## iter14 0.9457
-## iter15 0.9457
-## iter16 0.9457
-## iter17 0.9457
-## iter18 0.9457
-## iter19 0.9457
-## iter20 0.9457</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r">IsoEBOut$Beta</code></pre>
-<pre><code>##          Ng1    Ng2   Ng3
-## iter1  4.394  5.989 11.27
-## iter2  4.757  9.905 10.97
-## iter3  4.827  9.960 11.07
-## iter4  4.797 10.066 10.99
-## iter5  4.762  9.979 10.99
-## iter6  4.768  9.996 10.97
-## iter7  4.770  9.826 10.93
-## iter8  4.755  9.949 10.93
-## iter9  4.755  9.949 10.93
-## iter10 4.755  9.949 10.93
-## iter11 4.755  9.949 10.93
-## iter12 4.755  9.949 10.93
-## iter13 4.755  9.949 10.93
-## iter14 4.755  9.949 10.93
-## iter15 4.755  9.949 10.93
-## iter16 4.755  9.949 10.93
-## iter17 4.755  9.949 10.93
-## iter18 4.755  9.949 10.93
-## iter19 4.755  9.949 10.93
-## iter20 4.755  9.949 10.93</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r">IsoEBOut$P</code></pre>
-<pre><code>##           [,1]
-## iter1  0.08780
-## iter2  0.04364
-## iter3  0.03155
-## iter4  0.02749
-## iter5  0.02589
-## iter6  0.02515
-## iter7  0.02493
-## iter8  0.02420
-## iter9  0.02420
-## iter10 0.02420
-## iter11 0.02420
-## iter12 0.02420
-## iter13 0.02420
-## iter14 0.02420
-## iter15 0.02420
-## iter16 0.02420
-## iter17 0.02420
-## iter18 0.02420
-## iter19 0.02420
-## iter20 0.02420</code></pre>
-<p>We see that EBSeq called 337 transcripts (0.9029 percent) differentially expressed (posterior probability of being differentially expressed at least 0.95), and if we move the PPDE cutoff to 0.8, EBSeq called 463 transcripts (1.2404 percent) differerentially expressed.</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sessionInfo</span>()</code></pre>
-<pre><code>## R version 3.1.0 Patched (2014-04-24 r65479)
-## Platform: x86_64-unknown-linux-gnu (64-bit)
+## 5348.660 1491.580 6909.106
+</code></pre>
+
+<pre><code class="r"># check convergence
+IsoEBOut$Alpha
+</code></pre>
+
+<pre><code>##             [,1]
+## iter1  0.8959659
+## iter2  0.9513329
+## iter3  0.9563787
+## iter4  0.9532540
+## iter5  0.9482701
+## iter6  0.9473729
+## iter7  0.9437690
+## iter8  0.9457036
+## iter9  0.9457036
+## iter10 0.9457036
+## iter11 0.9457036
+## iter12 0.9457036
+## iter13 0.9457036
+## iter14 0.9457036
+## iter15 0.9457036
+## iter16 0.9457036
+## iter17 0.9457036
+## iter18 0.9457036
+## iter19 0.9457036
+## iter20 0.9457036
+</code></pre>
+
+<pre><code class="r">IsoEBOut$Beta
+</code></pre>
+
+<pre><code>##             Ng1       Ng2      Ng3
+## iter1  4.394379  5.988933 11.26614
+## iter2  4.757139  9.905462 10.96516
+## iter3  4.827326  9.960440 11.06631
+## iter4  4.796831 10.065979 10.98645
+## iter5  4.762127  9.979470 10.98897
+## iter6  4.767736  9.996309 10.97209
+## iter7  4.769880  9.826063 10.92990
+## iter8  4.754775  9.948738 10.92670
+## iter9  4.754775  9.948738 10.92670
+## iter10 4.754775  9.948738 10.92670
+## iter11 4.754775  9.948738 10.92670
+## iter12 4.754775  9.948738 10.92670
+## iter13 4.754775  9.948738 10.92670
+## iter14 4.754775  9.948738 10.92670
+## iter15 4.754775  9.948738 10.92670
+## iter16 4.754775  9.948738 10.92670
+## iter17 4.754775  9.948738 10.92670
+## iter18 4.754775  9.948738 10.92670
+## iter19 4.754775  9.948738 10.92670
+## iter20 4.754775  9.948738 10.92670
+</code></pre>
+
+<pre><code class="r">IsoEBOut$P
+</code></pre>
+
+<pre><code>##              [,1]
+## iter1  0.08779853
+## iter2  0.04364201
+## iter3  0.03155106
+## iter4  0.02748641
+## iter5  0.02588776
+## iter6  0.02515244
+## iter7  0.02493396
+## iter8  0.02420131
+## iter9  0.02420131
+## iter10 0.02420131
+## iter11 0.02420131
+## iter12 0.02420131
+## iter13 0.02420131
+## iter14 0.02420131
+## iter15 0.02420131
+## iter16 0.02420131
+## iter17 0.02420131
+## iter18 0.02420131
+## iter19 0.02420131
+## iter20 0.02420131
+</code></pre>
+
+<p>We see that EBSeq called 337 transcripts (0.9028559 percent) differentially expressed (posterior probability of being differentially expressed at least 0.95), and if we move the PPDE cutoff to 0.8, EBSeq called 463 transcripts (1.2404222 percent) differerentially expressed.</p>
+
+<pre><code class="r">sessionInfo()
+</code></pre>
+
+<pre><code>## R version 3.1.1 (2014-07-10)
+## Platform: x86_64-apple-darwin13.1.0 (64-bit)
 ## 
 ## locale:
-##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
-##  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
-##  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
-##  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
-##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            
-## [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
 ## 
 ## attached base packages:
-## [1] parallel  stats     graphics  grDevices utils     datasets  methods  
-## [8] base     
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-## [1] reshape2_1.4        EBSeq_1.5.3         gplots_2.13.0      
-## [4] blockmodeling_0.1.8 IRanges_1.99.23     S4Vectors_0.1.2    
-## [7] BiocGenerics_0.11.3 ballgown_0.99.3     colorout_1.0-2     
+## [1] reshape2_1.4        EBSeq_1.6.0         gplots_2.15.0      
+## [4] blockmodeling_0.1.8 ballgown_1.0.1      knitr_1.8.2        
+## [7] colorout_1.0-3      devtools_1.6.1     
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] BatchJobs_1.3            BBmisc_1.7              
-##  [3] Biobase_2.25.0           BiocParallel_0.7.7      
-##  [5] Biostrings_2.33.13       bitops_1.0-6            
-##  [7] brew_1.0-6               caTools_1.17            
-##  [9] checkmate_1.1            codetools_0.2-8         
-## [11] corpcor_1.6.6            DBI_0.2-7               
-## [13] digest_0.6.4             evaluate_0.5.5          
-## [15] fail_1.2                 foreach_1.4.2           
-## [17] formatR_0.10             gdata_2.13.3            
-## [19] GenomeInfoDb_1.1.13      GenomicAlignments_1.1.22
-## [21] GenomicRanges_1.17.26    gtools_3.4.0            
-## [23] iterators_1.0.7          KernSmooth_2.23-12      
-## [25] knitr_1.6                limma_3.20.4            
-## [27] plyr_1.8.1               RColorBrewer_1.0-5      
-## [29] Rcpp_0.11.1              RCurl_1.95-4.1          
-## [31] Rsamtools_1.17.31        RSQLite_0.11.4          
-## [33] rtracklayer_1.25.13      sendmailR_1.1-2         
-## [35] splines_3.1.0            stats4_3.1.0            
-## [37] stringr_0.6.2            sva_3.10.0              
-## [39] tools_3.1.0              XML_3.98-1.1            
-## [41] XVector_0.5.7            zlibbioc_1.10.0</code></pre>
+##  [1] annotate_1.44.0         AnnotationDbi_1.28.1   
+##  [3] base64enc_0.1-2         BatchJobs_1.5          
+##  [5] BBmisc_1.8              Biobase_2.26.0         
+##  [7] BiocGenerics_0.12.1     BiocParallel_1.0.0     
+##  [9] Biostrings_2.34.0       bitops_1.0-6           
+## [11] brew_1.0-6              caTools_1.17.1         
+## [13] checkmate_1.5.0         codetools_0.2-9        
+## [15] DBI_0.3.1               digest_0.6.4           
+## [17] evaluate_0.5.5          fail_1.2               
+## [19] foreach_1.4.2           formatR_1.0            
+## [21] gdata_2.13.3            genefilter_1.48.1      
+## [23] GenomeInfoDb_1.2.3      GenomicAlignments_1.2.1
+## [25] GenomicRanges_1.18.3    grid_3.1.1             
+## [27] gtools_3.4.1            IRanges_2.0.0          
+## [29] iterators_1.0.7         KernSmooth_2.23-13     
+## [31] lattice_0.20-29         limma_3.22.1           
+## [33] Matrix_1.1-4            mgcv_1.8-4             
+## [35] nlme_3.1-118            parallel_3.1.1         
+## [37] plyr_1.8.1              RColorBrewer_1.0-5     
+## [39] Rcpp_0.11.3             RCurl_1.95-4.4         
+## [41] Rsamtools_1.18.2        RSQLite_1.0.0          
+## [43] rtracklayer_1.26.2      S4Vectors_0.4.0        
+## [45] sendmailR_1.2-1         splines_3.1.1          
+## [47] stats4_3.1.1            stringr_0.6.2          
+## [49] survival_2.37-7         sva_3.12.0             
+## [51] tools_3.1.1             XML_3.98-1.1           
+## [53] xtable_1.7-4            XVector_0.6.0          
+## [55] zlibbioc_1.12.0
+</code></pre>
+
+</body>
+
+</html>
