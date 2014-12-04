@@ -1,10 +1,9 @@
 ## code for differential expression simulations
 
-This code executes the simulations presented in the [ballgown manuscript](http://biorxiv.org/content/early/2014/03/30/003665.full-text.pdf+html). Specifically, `sim_results.R` produces these results:
+This code executes the simulations presented in the [ballgown manuscript](http://biorxiv.org/content/early/2014/09/05/003665.full-text.pdf+html). Specifically, `sim_results.R` produces these results:
 
-* Figure 2c and 2d
-* Figure 6a, 6b, and 6c
-* Supplementary Figure 1 (both panels)
+* Supplementary Figure 6 (all panels)
+* Supplementary Figure 7a-b
 
 ### two simulations
 Two separate simulation scenarios are presented in the manuscript. 
@@ -13,25 +12,25 @@ Two separate simulation scenarios are presented in the manuscript.
 
 2. The second scenario (described in the manuscript supplement) involves drawing the number of reads to generate from each transcript from a negative binomial distribution. The transcript's length has no effect on the number of reads simulated from it. Scripts for this scenario are in the `NB` folder.
 
-Specific details about parameters chosen for these simulations are available in the [manuscript supplement](http://biorxiv.org/content/biorxiv/suppl/2014/03/30/003665.DC1/003665-1.pdf), Section 3 (Simulation studies).
+Specific details about parameters chosen for these simulations are available in the manuscript supplement (Supplementary Note 5).
 
 ### how to use this code
 
 #### (0) get dependencies
-This code depends on R and the Rscript command line utility, the Biostrings, Ballgown, and Polyester R packages, and Python >=2.5. We ran all code on Linux.
+This code depends on R and the Rscript command line utility, the Biostrings, Ballgown, and Polyester R packages, and Python >=2.5. I also used my custom `usefulstuff` R package, available from GitHub. We ran all code on Linux.
 
-To download Biostrings and Ballgown: in R, run:
+To download Biostrings, Ballgown, and Polyester: in R, run:
 ```S
 source("http://bioconductor.org/biocLite.R")
 biocLite("Biostrings")
 biocLite("ballgown")
+biocLite("polyester")
 ```
 
-To download Polyester: in R, run:
-```S
-install.packages("devtools") #if needed
-library(devtools)
-install_github("polyester", "alyssafrazee")
+You'll need devtools to install usefulstuff from GitHub:
+```R
+install.packages('devtools') #if needed
+devtools::install_github('alyssafrazee/usefulstuff')
 ```
 
 Additionally, we relied heavily on the Sun Grid Engine (SGE) scheduling system when running this pipeline, since this is what our department uses to schedule batch cluster jobs. In particular, the shell scripts in this folder contain `qsub` commands, indicating that a script is being submitted to the cluster to be run, so these lines will have to be modified if you want to run this code without using SGE. 
@@ -46,7 +45,7 @@ We used Illumina's iGenomes annotation files, available at [this link](http://to
 
 To create the `genes-clean.gtf` file (used in `sim_results.R`), the `genes.gtf` file (located in the `Annotation/Genes` subfolder) was processed with the `clean_genes.R` script. This `genes-clean.gtf` file contains only chromosomes 1-22, X, and Y (the clean_genes script removes all others). 
 
-`genes-clean.gtf` is available [here](https://www.dropbox.com/s/89iaagrkwlu0tbs/genes-clean.gtf).
+`genes-clean.gtf` is available [here](https://www.dropbox.com/s/89iaagrkwlu0tbs/genes-clean.gtf). You should put it in the top-level directory (i.e., in *this* directory).
 
 
 #### (3) pre-build a transcriptome for TopHat
@@ -55,7 +54,7 @@ During TopHat runs in the simulations, we aligned first to the transcriptome, th
 #### (4) run the shell script starting with `run_sim`
 i.e., run `run_sim_directFPKM_geuvadis.sh` or `run_sim_p00.sh`. 
 
-You will need to edit some environment variables at the beginning of these scripts:  
+You might need to edit some environment variables at the beginning of these scripts:  
 * `$SOFTWAREPATH` should contain a folder called `cufflinks-2.1.1.Linux_x86_64` (containing `cufflinks`, `cuffmerge`, and `cuffdiff`)
 * `$SOFTWAREPATH` should also contain the `tablemaker` binary
 * `$ANNOTATIONPATH` should contain a folder called `Homo_Sapiens`, which comes with the Ensembl [iGenomes download](http://tophat.cbcb.umd.edu/igenomes.shtml)
@@ -84,14 +83,5 @@ library(ballgown)
 bgresults = ballgown(dataDir='ballgown', samplePattern='sample')
 ```
 
-Code used to obtain results presented in the manuscript is in `sim_results.R`. That script needs three variables at the beginning:  
-* `fpkm_sim_dir` should point to `$FOLDERNAME` from `run_sim_directFPKM_geuvadis.sh` (i.e., the output folder from scenario #1)
-* `nb_sim_dir` should point to `$FOLDERNAME` from `run_sim_p00.sh`
-* `annotation` should point to `genes-clean.gtf` (see section (2); [downloadable here](https://www.dropbox.com/s/89iaagrkwlu0tbs/genes-clean.gtf))
-
-### simulated reads
-The simulated reads used for the analysis in the paper are available for download:
-* [FPKM simulation (scenario 1)](https://www.dropbox.com/s/bqrusc1cpq51ecq/lognormalgeuvadis.zip)
-* [Negative binomial simulation (scenario 2)](https://www.dropbox.com/s/2e5gmasapnnzn29/nbp0.zip)
-
+Running `sim_results.R` gives all the figures/results for the manuscript.
  
